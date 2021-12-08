@@ -1,6 +1,6 @@
 ### Archista
 
-A basic bar configuration using Barista. With minumum formatting using mdi icons.
+A basic bar configuration using [Barista](https://github.com/soumya92/barista). With minumum formatting using [mdi icons](https://materialdesignicons.com/).
 
 ## Modules
 
