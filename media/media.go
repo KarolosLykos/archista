@@ -43,6 +43,7 @@ func makeMediaIconAndPosition(m media.Info) *pango.Node {
 		iconAndPosition.Append(utils.Spacer,
 			pango.Textf("%s/", formatMediaTime(m.Position())))
 	}
+
 	if m.PlaybackStatus == media.Paused || m.PlaybackStatus == media.Playing {
 		iconAndPosition.Append(utils.Spacer,
 			pango.Textf("%s", formatMediaTime(m.Length)))

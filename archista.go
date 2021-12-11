@@ -4,6 +4,7 @@ import (
 	"barista.run"
 	"barista.run/group/modal"
 	"barista.run/pango/icons/mdi"
+
 	"github.com/KarolosLykos/archista/cpu"
 	"github.com/KarolosLykos/archista/date"
 	medias "github.com/KarolosLykos/archista/media"
@@ -12,7 +13,6 @@ import (
 )
 
 func main() {
-
 	mdi.Load(utils.Home("Downloads/MaterialDesign-Webfont"))
 
 	localDate := date.GetLocalDate()
