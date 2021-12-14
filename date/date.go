@@ -27,6 +27,7 @@ func GetLocalTime() *clock.Module {
 			return outputs.Pango(
 				utils.Spacer,
 				now.Format("15:04:05"),
+				utils.Spacer,
 			)
 		})
 

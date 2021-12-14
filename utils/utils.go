@@ -5,7 +5,9 @@ import (
 	"path/filepath"
 
 	"barista.run/bar"
+	"barista.run/base/click"
 	"barista.run/colors"
+	"barista.run/group/collapsing"
 	"barista.run/outputs"
 	"barista.run/pango"
 )
@@ -52,4 +54,13 @@ func Threshold(out *bar.Segment, urgent bool, color ...bool) *bar.Segment {
 		}
 	}
 	return out
+}
+
+func CollapsingButtons(c collapsing.Controller) (start, end bar.Output) {
+	if c.Expanded() {
+		return outputs.Pango(pango.Icon("mdi-menu-right-outline")).OnClick(click.Left(c.Collapse)),
+			outputs.Pango(pango.Icon("mdi-menu-left-outline")).OnClick(click.Left(c.Collapse))
+
+	}
+	return outputs.Pango(pango.Icon("mdi-home-lightbulb-outline")).OnClick(click.Left(c.Expand)), nil
 }

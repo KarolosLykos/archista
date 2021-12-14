@@ -19,7 +19,7 @@ func GetVolume() *volume.Module {
 	return volume.New(alsa.DefaultMixer()).Output(func(v volume.Volume) bar.Output {
 		if v.Mute {
 			return outputs.
-				Pango(pango.Icon("mdi-volume-off"), pango.Textf("%s", "MUT")).
+				Pango(pango.Icon("mdi-volume-off")).
 				Color(colors.Hex("#FF0000")).
 				OnClick(click.Left(func() {
 					exec.Command("pactl", "set-sink-mute", "@DEFAULT_SINK@", "toggle").Run()
