@@ -15,6 +15,7 @@ import (
 	"github.com/KarolosLykos/archista/lights"
 	medias "github.com/KarolosLykos/archista/media"
 	"github.com/KarolosLykos/archista/sound"
+	"github.com/KarolosLykos/archista/update"
 	"github.com/KarolosLykos/archista/utils"
 )
 
@@ -49,8 +50,9 @@ func main() {
 	light9 := lights.GetLight(config.HUE.Host, config.HUE.User, 9)
 
 	collapingModule, g := collapsing.Group(light1, light2, light3, light5, light6, light7, light8, light9)
-
 	g.ButtonFunc(utils.CollapsingButtons)
+
+	updates := update.GetUpdates()
 
 	mainModal := modal.New()
 	mainModal.
@@ -60,33 +62,7 @@ func main() {
 		Detail(mediaDetail)
 
 	mm, _ := mainModal.Build()
-	if err := barista.Run(collapingModule, source, mm, temp, localDate, localTime); err != nil {
+	if err := barista.Run(updates, collapingModule, source, mm, temp, localDate, localTime); err != nil {
 		fmt.Println(err)
 	}
 }
-
-// package main
-
-// import (
-// 	"flag"
-// 	"fmt"
-
-// 	"github.com/KarolosLykos/archista/config"
-// )
-
-// func main() {
-// 	var path string
-// 	flag.StringVar(&path, "config", "", "configuration file path")
-// 	flag.Parse()
-
-// 	fmt.Println(path)
-
-// 	config, err := config.Load(path)
-// 	if err != nil {
-// 		fmt.Println(err)
-
-// 		return
-// 	}
-
-// 	fmt.Println(config)
-// }
