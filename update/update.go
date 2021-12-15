@@ -1,10 +1,7 @@
 package update
 
 import (
-	"os/exec"
-
 	"barista.run/bar"
-	"barista.run/base/click"
 	"barista.run/colors"
 	"barista.run/outputs"
 	"barista.run/pango"
@@ -19,11 +16,13 @@ func GetUpdates() *updates.Module {
 			return outputs.Pango(pango.Icon("mdi-package-variant"), utils.Spacer)
 		}
 
-		return outputs.Pango(
-			utils.Spacer,
-			pango.Icon("mdi-package-variant-closed"),
-			pango.Textf("%d", info.Updates),
-			utils.Spacer,
-		).Color(colors.Hex("#a04f4f")).OnClick(click.Right(func() { exec.Command("urxvt").Run() }))
+		return outputs.
+			Pango(
+				utils.Spacer,
+				pango.Icon("mdi-package-variant-closed"),
+				pango.Textf("%d", info.Updates),
+				utils.Spacer,
+			).
+			Color(colors.Hex("#a04f4f"))
 	})
 }
