@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"barista.run/bar"
+	"barista.run/colors"
 	"barista.run/modules/cputemp"
 	"barista.run/outputs"
 	"barista.run/pango"
@@ -16,7 +17,7 @@ func GetCPUTemp() *cputemp.Module {
 		RefreshInterval(2 * time.Second).
 		Output(func(temp unit.Temperature) bar.Output {
 			out := outputs.Pango(
-				pango.Icon("mdi-fan"), utils.Spacer,
+				pango.Icon("mdi-fan").Color(colors.Hex("#13ca91")), utils.Spacer,
 				pango.Textf("%2d℃", int(temp.Celsius())),
 			)
 			utils.Threshold(out,

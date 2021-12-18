@@ -5,14 +5,32 @@ import (
 	"time"
 
 	"barista.run/bar"
+	"barista.run/group/modal"
 	"barista.run/modules/media"
 	"barista.run/modules/meta/split"
+	"barista.run/modules/volume"
 	"barista.run/outputs"
 	"barista.run/pango"
+
 	"github.com/KarolosLykos/archista/utils"
 )
 
-func Player() (bar.Module, bar.Module) {
+func GetMedia(vol *volume.Module) bar.Module {
+	mediaSummary, mediaDetail := player()
+
+	mainModal := modal.New()
+	mainModal.
+		Mode("media").
+		SetOutput(utils.MakeIconOutput("mdi-music")).
+		Add(vol, mediaSummary).
+		Detail(mediaDetail)
+
+	mm, _ := mainModal.Build()
+
+	return mm
+}
+
+func player() (bar.Module, bar.Module) {
 	return split.New(media.Auto().Output(mediaFormatFunc), 1)
 }
 

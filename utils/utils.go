@@ -5,9 +5,7 @@ import (
 	"path/filepath"
 
 	"barista.run/bar"
-	"barista.run/base/click"
 	"barista.run/colors"
-	"barista.run/group/collapsing"
 	"barista.run/outputs"
 	"barista.run/pango"
 )
@@ -40,7 +38,7 @@ func Truncate(in string, l int) string {
 var Spacer = pango.Text(" ").XSmall()
 
 func MakeIconOutput(key string) *bar.Segment {
-	return outputs.Pango(Spacer, pango.Icon(key), Spacer)
+	return outputs.Pango(Spacer, pango.Icon(key).Color(colors.Hex("#13ca91")), Spacer)
 }
 
 func Threshold(out *bar.Segment, urgent bool, color ...bool) *bar.Segment {
@@ -54,13 +52,4 @@ func Threshold(out *bar.Segment, urgent bool, color ...bool) *bar.Segment {
 		}
 	}
 	return out
-}
-
-func CollapsingButtons(c collapsing.Controller) (start, end bar.Output) {
-	if c.Expanded() {
-		return outputs.Pango(pango.Icon("mdi-menu-right-outline")).OnClick(click.Left(c.Collapse)),
-			outputs.Pango(pango.Icon("mdi-menu-left-outline")).OnClick(click.Left(c.Collapse))
-
-	}
-	return outputs.Pango(pango.Icon("mdi-home-lightbulb-outline")).OnClick(click.Left(c.Expand)), nil
 }
