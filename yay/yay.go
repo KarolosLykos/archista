@@ -12,11 +12,8 @@ import (
 	"barista.run/base/value"
 	"barista.run/colors"
 	"barista.run/outputs"
-	"barista.run/pango"
 	"barista.run/timing"
 	"golang.org/x/time/rate"
-
-	"github.com/KarolosLykos/archista/utils"
 )
 
 // RateLimiter throttles state updates to once every ~20ms to avoid unexpected behaviour.
@@ -33,7 +30,7 @@ type Module struct {
 }
 
 type Yay struct {
-	updates        int
+	Updates        int
 	packageDetails PackageDetails
 	lastUpdated    time.Time
 }
@@ -117,15 +114,28 @@ func defaultClickHandler(m *Module, y Yay) func(bar.Event) {
 			return
 		}
 
-		if y.lastUpdated.After(time.Now().Add(-m.interval)) {
-			body := fmt.Sprintf("Last updated at: %s", y.lastUpdated.Format("15:04:05"))
-			exec.Command("notify-send", "-i", "chronometer", "Up to date", body).Run()
+		if e.Button == bar.ButtonLeft {
+			if y.lastUpdated.After(time.Now().Add(-m.interval / 2)) {
+				body := fmt.Sprintf("Last updated at: %s", y.lastUpdated.Format("15:04:05"))
+				exec.Command("notify-send", "-i", "chronometer", "Up to date", body).Run()
 
-			return
+				return
+			}
+
+			m = update(m)
 		}
 
-		if e.Button == bar.ButtonLeft {
-			m = update(m)
+		if e.Button == bar.ButtonMiddle && y.Updates > 0 {
+			s := ""
+			for _, p := range y.packageDetails {
+				s += fmt.Sprintf("%s(%s) -> %s", p.PackageName, p.CurrentVersion, p.TargetVersion)
+				s += "\n"
+			}
+
+			s = strings.TrimSuffix(s, "\n")
+			exec.Command("notify-send", "-i", "view-process-tree", "Packages", s).Run()
+
+			return
 		}
 
 		m.currentInfo.Set(y)
@@ -134,7 +144,7 @@ func defaultClickHandler(m *Module, y Yay) func(bar.Event) {
 
 func update(m *Module) *Module {
 	y := Yay{
-		updates:     0,
+		Updates:     0,
 		lastUpdated: time.Now(),
 	}
 
@@ -161,7 +171,7 @@ func update(m *Module) *Module {
 		return m
 	}
 
-	y.updates = len(details)
+	y.Updates = len(details)
 	y.packageDetails = details
 	y.lastUpdated = time.Now()
 	m.err = nil
@@ -209,22 +219,4 @@ func parsePackageDetails(raw []byte) (PackageDetails, error) {
 	}
 
 	return details, nil
-}
-
-func GetUpdates() *Module {
-	m := New().RefreshInterval(1 * time.Hour)
-	return m.Output(func(y Yay) bar.Output {
-		if y.updates == 0 {
-			return outputs.Pango(pango.Icon("mdi-package-variant").Color(colors.Hex("#13ca91")), utils.Spacer)
-		}
-
-		return outputs.
-			Pango(
-				utils.Spacer,
-				pango.Icon("mdi-package-variant-closed"),
-				pango.Textf("%d", y.updates),
-				utils.Spacer,
-			).
-			Color(colors.Hex("#a04f4f"))
-	})
 }
