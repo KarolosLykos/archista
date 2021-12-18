@@ -51,6 +51,7 @@ func mediaFormatFunc(m media.Info) bar.Output {
 	} else {
 		iconAndPosition = makeMediaIconAndPosition(m)
 	}
+
 	return outputs.Group(iconAndPosition, outputs.Pango(artist, " - ", title))
 }
 
