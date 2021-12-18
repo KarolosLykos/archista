@@ -14,8 +14,8 @@ import (
 	"github.com/KarolosLykos/archista/logo"
 	medias "github.com/KarolosLykos/archista/media"
 	"github.com/KarolosLykos/archista/sound"
-	"github.com/KarolosLykos/archista/update"
 	"github.com/KarolosLykos/archista/utils"
+	"github.com/KarolosLykos/archista/yay"
 )
 
 func main() {
@@ -39,8 +39,10 @@ func main() {
 	temp := cpu.GetCPUTemp()
 	mediaMM := medias.GetMedia(volume)
 	lightsCM := lights.GetLights(config)
-	updates := update.GetUpdates()
+	// updates := update.GetUpdates()
 	arch := logo.GetLogo()
 
-	panic(barista.Run(updates, lightsCM, source, mediaMM, temp, localDate, localTime, arch))
+	y := yay.GetUpdates()
+
+	panic(barista.Run(y, lightsCM, source, mediaMM, temp, localDate, localTime, arch))
 }
