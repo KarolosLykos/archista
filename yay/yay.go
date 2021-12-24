@@ -19,7 +19,7 @@ import (
 )
 
 // RateLimiter throttles state updates to once every ~20ms to avoid unexpected behaviour.
-var RateLimiter = rate.NewLimiter(rate.Every(20*time.Millisecond), 1)
+var RateLimiter = rate.NewLimiter(rate.Every(10*time.Minute), 1)
 
 // Module represents a hue bar module. It supports setting the output
 // format, click handler, and update frequency.
@@ -122,18 +122,16 @@ func defaultClickHandler(m *Module, y Yay) func(bar.Event) {
 		}
 
 		if !RateLimiter.Allow() {
-			// Don't update the state if it was updated <20ms ago or the light is unreachable
+			// Don't update the state if it was updated <10m ago or the light is unreachable
+			body := fmt.Sprintf("Last updated at: %s", y.lastUpdated.Format("15:04:05"))
+			exec.Command("notify-send", "-i", "chronometer", "Rate limited", body).Run()
+
 			return
 		}
 
 		if e.Button == bar.ButtonLeft {
-			if y.lastUpdated.After(time.Now().Add(-m.interval / 2)) {
-				body := fmt.Sprintf("Last updated at: %s", y.lastUpdated.Format("15:04:05"))
-				exec.Command("notify-send", "-i", "chronometer", "Up to date", body).Run()
-
-				return
-			}
-
+			body := fmt.Sprintf("Current update time: %s", time.Now().Format("15:04:05"))
+			exec.Command("notify-send", "-i", "chronometer", "Updating...", body).Run()
 			m = update(m)
 		}
 
