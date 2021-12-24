@@ -12,7 +12,9 @@ import (
 	"barista.run/base/value"
 	"barista.run/colors"
 	"barista.run/outputs"
+	"barista.run/pango"
 	"barista.run/timing"
+	"github.com/KarolosLykos/archista/utils"
 	"golang.org/x/time/rate"
 )
 
@@ -84,6 +86,16 @@ func (m *Module) Stream(s bar.Sink) {
 
 	for {
 		if s.Error(err) {
+			s.Output(outputs.Pango(pango.Icon("mdi-update").Color(colors.Hex("#13ca91")), utils.Spacer).
+				OnClick(func(e bar.Event) {
+					if e.Button == bar.ButtonLeft {
+						update(m)
+					}
+					if e.Button == bar.ButtonRight {
+						exec.Command("notify-send", "-i", "cancel", "Error", fmt.Sprintf("Error: %v", m.err)).Run()
+					}
+				}))
+
 			return
 		} else if info, ok := i.(Yay); ok {
 			s.Output(outputs.Group(outf(info)).OnClick(defaultClickHandler(m, info)))
