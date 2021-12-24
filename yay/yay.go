@@ -130,8 +130,6 @@ func defaultClickHandler(m *Module, y Yay) func(bar.Event) {
 		}
 
 		if e.Button == bar.ButtonLeft {
-			body := fmt.Sprintf("Current update time: %s", time.Now().Format("15:04:05"))
-			exec.Command("notify-send", "-i", "chronometer", "Updating...", body).Run()
 			m = update(m)
 		}
 
@@ -153,11 +151,14 @@ func defaultClickHandler(m *Module, y Yay) func(bar.Event) {
 }
 
 func update(m *Module) *Module {
+	body := fmt.Sprintf("Current update time: %s", time.Now().Format("15:04:05"))
+
 	y := Yay{
 		Updates:     0,
 		lastUpdated: time.Now(),
 	}
 
+	exec.Command("notify-send", "-i", "chronometer", "-h", "int:value:20", "Updating...", body).Run()
 	if _, err := exec.Command("yay", "-Sy").CombinedOutput(); err != nil {
 		m.currentInfo.Set(y)
 		m.err = err
@@ -165,6 +166,7 @@ func update(m *Module) *Module {
 		return m
 	}
 
+	exec.Command("notify-send", "-i", "chronometer", "-h", "int:value:40", "Updating...", body).Run()
 	output, err := exec.Command("yay", "-Qu").CombinedOutput()
 	if err != nil {
 		m.currentInfo.Set(y)
@@ -173,6 +175,7 @@ func update(m *Module) *Module {
 		return m
 	}
 
+	exec.Command("notify-send", "-i", "chronometer", "-h", "int:value:60", "Updating...", body).Run()
 	details, err := parsePackageDetails(output)
 	if err != nil {
 		m.currentInfo.Set(y)
@@ -186,8 +189,10 @@ func update(m *Module) *Module {
 	y.lastUpdated = time.Now()
 	m.err = nil
 
+	exec.Command("notify-send", "-i", "chronometer", "-h", "int:value:80", "Updating...", body).Run()
 	m.currentInfo.Set(y)
 
+	exec.Command("notify-send", "-i", "chronometer", "-t", "800", "-h", "int:value:100", "Updating...", body).Run()
 	return m
 }
 
