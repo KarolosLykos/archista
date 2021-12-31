@@ -19,13 +19,15 @@ import (
 )
 
 func main() {
-	mdi.Load(utils.Home("Downloads/MaterialDesign-Webfont"))
+	if err := mdi.Load(utils.Home("Downloads/MaterialDesign-Webfont")); err != nil {
+		panic(err)
+	}
 
 	var path string
 	flag.StringVar(&path, "config", "", "configuration file path")
 	flag.Parse()
 
-	config, err := config.Load(path)
+	cfg, err := config.Load(path)
 	if err != nil {
 		fmt.Println(err)
 
@@ -38,7 +40,7 @@ func main() {
 	source := sound.GetSource()
 	temp := cpu.GetCPUTemp()
 	mediaMM := medias.GetMedia(volume)
-	lightsCM := lights.GetLights(config)
+	lightsCM := lights.GetLights(cfg)
 	arch := logo.GetLogo()
 	update := updates.GetUpdates()
 

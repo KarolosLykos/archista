@@ -121,6 +121,19 @@ func defaultClickHandler(m *Module, y Yay) func(bar.Event) {
 			return
 		}
 
+		if e.Button == bar.ButtonMiddle && y.Updates > 0 {
+			s := ""
+			for _, p := range y.packageDetails {
+				s += fmt.Sprintf("%s(%s) -> %s", p.PackageName, p.CurrentVersion, p.TargetVersion)
+				s += "\n"
+			}
+
+			s = strings.TrimSuffix(s, "\n")
+			exec.Command("notify-send", "-i", "view-process-tree", "Packages", s).Run()
+
+			return
+		}
+
 		if !RateLimiter.Allow() {
 			// Don't update the state if it was updated <20ms ago or the light is unreachable
 			return
@@ -135,19 +148,6 @@ func defaultClickHandler(m *Module, y Yay) func(bar.Event) {
 			}
 
 			m = update(m)
-		}
-
-		if e.Button == bar.ButtonMiddle && y.Updates > 0 {
-			s := ""
-			for _, p := range y.packageDetails {
-				s += fmt.Sprintf("%s(%s) -> %s", p.PackageName, p.CurrentVersion, p.TargetVersion)
-				s += "\n"
-			}
-
-			s = strings.TrimSuffix(s, "\n")
-			exec.Command("notify-send", "-i", "view-process-tree", "Packages", s).Run()
-
-			return
 		}
 
 		m.currentInfo.Set(y)
