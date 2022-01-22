@@ -134,8 +134,8 @@ func defaultClickHandler(m *Module, y Yay) func(bar.Event) {
 			return
 		}
 
-		if !RateLimiter.Allow() {
-			// Don't update the state if it was updated <10m ago or the light is unreachable
+		if !RateLimiter.Allow() && m.err == nil {
+			// Don't update the state if it was updated <10m ago
 			body := fmt.Sprintf("Last updated at: %s", y.lastUpdated.Format("15:04:05"))
 			exec.Command("notify-send", "-i", "chronometer", "Rate limited", body).Run()
 
