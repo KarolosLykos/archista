@@ -25,10 +25,10 @@ func GetLights(cfg *config.Config) bar.Module {
 	light8 := getLight(cfg.HUE.Host, cfg.HUE.User, 8)
 	light9 := getLight(cfg.HUE.Host, cfg.HUE.User, 9)
 
-	collapingModule, g := collapsing.Group(light1, light2, light3, light5, light6, light7, light8, light9)
+	collapsingModule, g := collapsing.Group(light1, light2, light3, light5, light6, light7, light8, light9)
 	g.ButtonFunc(collapsingButtons)
 
-	return collapingModule
+	return collapsingModule
 }
 
 func getLight(host, user string, ID int) *hue.Module {
