@@ -16,14 +16,18 @@ import (
 )
 
 func GetLights(cfg *config.Config) bar.Module {
-	light1 := getLight(cfg.HUE.Host, cfg.HUE.User, 1)
-	light2 := getLight(cfg.HUE.Host, cfg.HUE.User, 2)
-	light3 := getLight(cfg.HUE.Host, cfg.HUE.User, 3)
-	light5 := getLight(cfg.HUE.Host, cfg.HUE.User, 5)
-	light6 := getLight(cfg.HUE.Host, cfg.HUE.User, 6)
-	light7 := getLight(cfg.HUE.Host, cfg.HUE.User, 7)
-	light8 := getLight(cfg.HUE.Host, cfg.HUE.User, 8)
-	light9 := getLight(cfg.HUE.Host, cfg.HUE.User, 9)
+	b, err := huego.Discover()
+	if err != nil {
+		return nil
+	}
+	light1 := getLight(b.Host, cfg.HUE.User, 1)
+	light2 := getLight(b.Host, cfg.HUE.User, 2)
+	light3 := getLight(b.Host, cfg.HUE.User, 3)
+	light5 := getLight(b.Host, cfg.HUE.User, 5)
+	light6 := getLight(b.Host, cfg.HUE.User, 6)
+	light7 := getLight(b.Host, cfg.HUE.User, 7)
+	light8 := getLight(b.Host, cfg.HUE.User, 8)
+	light9 := getLight(b.Host, cfg.HUE.User, 9)
 
 	collapsingModule, g := collapsing.Group(light1, light2, light3, light5, light6, light7, light8, light9)
 	g.ButtonFunc(collapsingButtons)
