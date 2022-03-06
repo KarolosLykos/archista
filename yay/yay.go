@@ -134,6 +134,14 @@ func defaultClickHandler(m *Module, y Yay) func(bar.Event) {
 			return
 		}
 
+		if e.Button == bar.ButtonRight {
+			body := fmt.Sprintf("Last updated at: %s", y.lastUpdated.Format("15:04:05"))
+			exec.Command("notify-send", "-i", "chronometer", "Forced update", body).Run()
+			m = update(m)
+
+			return
+		}
+
 		if !RateLimiter.Allow() && m.err == nil {
 			// Don't update the state if it was updated <10m ago
 			body := fmt.Sprintf("Last updated at: %s", y.lastUpdated.Format("15:04:05"))
