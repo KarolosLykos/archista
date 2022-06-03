@@ -49,13 +49,13 @@ func GetSource() *volume.Module {
 			return outputs.
 				Pango(pango.Icon("mdi-headphones").Color(colors.Hex("#13ca91"))).
 				OnClick(click.Left(func() {
-					exec.Command("pacmd", "set-sink-port", "1", "analog-output-lineout").Run()
+					exec.Command("pacmd", "set-sink-port", "@DEFAULT_SINK@", "analog-output-lineout").Run()
 				}))
 		} else {
 			return outputs.
 				Pango(pango.Icon("mdi-speaker").Color(colors.Hex("#13ca91"))).
 				OnClick(click.Left(func() {
-					exec.Command("pacmd", "set-sink-port", "1", "analog-output-headphones").Run()
+					exec.Command("pacmd", "set-sink-port", "@DEFAULT_SINK@", "analog-output-headphones").Run()
 				}))
 		}
 	})

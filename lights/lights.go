@@ -1,6 +1,7 @@
 package lights
 
 import (
+	"barista.run/modules/static"
 	"strconv"
 
 	"barista.run/bar"
@@ -18,7 +19,11 @@ import (
 func GetLights(cfg *config.Config) bar.Module {
 	b, err := huego.Discover()
 	if err != nil {
-		return nil
+		return static.New(outputs.Pango(
+			utils.Spacer,
+			pango.Icon("mdi-power-plug-off").Color(colors.Hex("#13ca91")),
+			utils.Spacer,
+		))
 	}
 	light1 := getLight(b.Host, cfg.HUE.User, 1)
 	light2 := getLight(b.Host, cfg.HUE.User, 2)
