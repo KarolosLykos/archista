@@ -56,7 +56,7 @@ func (m *Module) Output(outputFunc func(*huego.Light) bar.Output) *Module {
 	return m
 }
 
-// defaultOutput configurea a default bar output
+// defaultOutput configures a default bar output
 func defaultOutput(l *huego.Light) bar.Output {
 	return outputs.Textf("id: %d, status: %t, reach: %t", l.ID, l.IsOn(), l.State.Reachable)
 }

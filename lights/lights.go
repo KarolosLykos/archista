@@ -2,7 +2,9 @@ package lights
 
 import (
 	"barista.run/modules/static"
+	"golang.org/x/net/context"
 	"strconv"
+	"time"
 
 	"barista.run/bar"
 	"barista.run/base/click"
@@ -17,7 +19,7 @@ import (
 )
 
 func GetLights(cfg *config.Config) bar.Module {
-	b, err := huego.Discover()
+	b, err := retryDiscover(huego.DiscoverContext, 2, time.Second*2)(context.Background())
 	if err != nil {
 		return static.New(outputs.Pango(
 			utils.Spacer,
@@ -25,6 +27,7 @@ func GetLights(cfg *config.Config) bar.Module {
 			utils.Spacer,
 		))
 	}
+
 	light1 := getLight(b.Host, cfg.HUE.User, 1)
 	light2 := getLight(b.Host, cfg.HUE.User, 2)
 	light3 := getLight(b.Host, cfg.HUE.User, 3)
@@ -38,6 +41,27 @@ func GetLights(cfg *config.Config) bar.Module {
 	g.ButtonFunc(collapsingButtons)
 
 	return collapsingModule
+}
+
+func retryDiscover(
+	f func(ctx context.Context) (*huego.Bridge, error),
+	retries int,
+	delay time.Duration,
+) func(ctx context.Context) (*huego.Bridge, error) {
+	return func(ctx context.Context) (*huego.Bridge, error) {
+		for r := 0; ; r++ {
+			response, err := f(ctx)
+			if err == nil || r >= retries {
+				return response, err
+			}
+
+			select {
+			case <-time.After(delay):
+			case <-ctx.Done():
+				return nil, ctx.Err()
+			}
+		}
+	}
 }
 
 func getLight(host, user string, ID int) *hue.Module {
