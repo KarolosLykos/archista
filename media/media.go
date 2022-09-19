@@ -57,9 +57,7 @@ func mediaFormatFunc(m media.Info) bar.Output {
 	return outputs.Group(iconAndPosition, outputs.Pango(artist, " - ", title))
 }
 
-func makeMediaIconAndPosition(m media.Info) *pango.Node {
-	iconAndPosition := pango.New()
-
+func makeMediaIconAndPosition(m media.Info) (iconAndPosition *pango.Node) {
 	if m.PlaybackStatus == media.Playing {
 		iconAndPosition = pango.Icon("mdi-pause").Color(colors.Hex("#13ca91"))
 	} else {

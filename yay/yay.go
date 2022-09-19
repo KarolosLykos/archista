@@ -14,12 +14,13 @@ import (
 	"barista.run/outputs"
 	"barista.run/pango"
 	"barista.run/timing"
-	"github.com/KarolosLykos/archista/utils"
 	"golang.org/x/time/rate"
+
+	"github.com/KarolosLykos/archista/utils"
 )
 
-// RateLimiter throttles state updates to once every ~20ms to avoid unexpected behaviour.
-var RateLimiter = rate.NewLimiter(rate.Every(10*time.Minute), 1)
+// rateLimiter throttles state updates to once every ~20ms to avoid unexpected behaviour.
+var rateLimiter = rate.NewLimiter(rate.Every(10*time.Minute), 1)
 
 // Module represents a hue bar module. It supports setting the output
 // format, click handler, and update frequency.
@@ -33,7 +34,7 @@ type Module struct {
 
 type Yay struct {
 	Updates        int
-	packageDetails PackageDetails
+	packageDetails packageDetails
 	lastUpdated    time.Time
 }
 
@@ -46,15 +47,15 @@ func New() *Module {
 
 	m = update(m)
 
-	m.RefreshInterval(1 * time.Hour)
+	m.refreshInterval(1 * time.Hour)
 
 	m.Output(defaultOutput)
 
 	return m
 }
 
-// RefreshInterval configures the polling frequency.
-func (m *Module) RefreshInterval(interval time.Duration) *Module {
+// refreshInterval configures the polling frequency.
+func (m *Module) refreshInterval(interval time.Duration) *Module {
 	m.interval = interval
 	m.scheduler.Every(interval)
 
@@ -67,19 +68,23 @@ func (m *Module) Output(outputFunc func(Yay) bar.Output) *Module {
 	return m
 }
 
-// defaultOutput configurea a default bar output
-func defaultOutput(y Yay) bar.Output {
+// defaultOutput configures a default bar output.
+func defaultOutput(_ Yay) bar.Output {
 	return outputs.Textf("updates").Color(colors.Hex("#00FF00"))
 }
 
 // Stream starts the module.
 func (m *Module) Stream(s bar.Sink) {
+	var info Yay
 	i, err := m.currentInfo.Get()
 
 	nextInfo, done := m.currentInfo.Subscribe()
 	defer done()
 
-	outf := m.outputFunc.Get().(func(Yay) bar.Output)
+	outf, ok := m.outputFunc.Get().(func(Yay) bar.Output)
+	if !ok {
+		return
+	}
 
 	nextOutputFunc, done := m.outputFunc.Subscribe()
 	defer done()
@@ -92,18 +97,22 @@ func (m *Module) Stream(s bar.Sink) {
 						update(m)
 					}
 					if e.Button == bar.ButtonRight {
+						//nolint:errcheck,gosec // just a notification
 						exec.Command("notify-send", "-i", "cancel", "Error", fmt.Sprintf("Error: %v", m.err)).Run()
 					}
 				}))
 
 			return
-		} else if info, ok := i.(Yay); ok {
+		} else if info, ok = i.(Yay); ok {
 			s.Output(outputs.Group(outf(info)).OnClick(defaultClickHandler(m, info)))
 		}
 
 		select {
 		case <-nextOutputFunc:
-			outf = m.outputFunc.Get().(func(Yay) bar.Output)
+			outf, ok = m.outputFunc.Get().(func(Yay) bar.Output)
+			if !ok {
+				return
+			}
 		case <-nextInfo:
 			i, err = m.currentInfo.Get()
 		case <-m.scheduler.C:
@@ -113,9 +122,12 @@ func (m *Module) Stream(s bar.Sink) {
 }
 
 // defaultClickHandler provides a simple example of the click handler capabilities.
+//
+//nolint:gosec // notify-send required in docs.
 func defaultClickHandler(m *Module, y Yay) func(bar.Event) {
 	return func(e bar.Event) {
 		if m.err != nil {
+			//nolint:errcheck // just a notification
 			exec.Command("notify-send", "-i", "cancel", "Error", fmt.Sprintf("Error: %v", m.err)).Run()
 
 			return
@@ -129,6 +141,8 @@ func defaultClickHandler(m *Module, y Yay) func(bar.Event) {
 			}
 
 			s = strings.TrimSuffix(s, "\n")
+
+			//nolint:errcheck // just a notification
 			exec.Command("notify-send", "-i", "view-process-tree", "Packages", s).Run()
 
 			return
@@ -136,15 +150,19 @@ func defaultClickHandler(m *Module, y Yay) func(bar.Event) {
 
 		if e.Button == bar.ButtonRight {
 			body := fmt.Sprintf("Last updated at: %s", y.lastUpdated.Format("15:04:05"))
+
+			//nolint:errcheck // just a notification
 			exec.Command("notify-send", "-i", "chronometer", "Forced update", body).Run()
 			m = update(m)
 
 			return
 		}
 
-		if !RateLimiter.Allow() && m.err == nil {
-			// Don't update the state if it was updated <10m ago
+		if !rateLimiter.Allow() && m.err == nil {
+			// Don't update the state if it was updated <10m ago.
 			body := fmt.Sprintf("Last updated at: %s", y.lastUpdated.Format("15:04:05"))
+
+			//nolint:errcheck // just a notification
 			exec.Command("notify-send", "-i", "chronometer", "Rate limited", body).Run()
 
 			return
@@ -166,6 +184,7 @@ func update(m *Module) *Module {
 		lastUpdated: time.Now(),
 	}
 
+	//nolint:errcheck // just a notification
 	exec.Command("notify-send", "-i", "chronometer", "-h", "int:value:20", "Updating...", body).Run()
 	if _, err := exec.Command("yay", "-Sy").CombinedOutput(); err != nil {
 		m.currentInfo.Set(y)
@@ -174,6 +193,7 @@ func update(m *Module) *Module {
 		return m
 	}
 
+	//nolint:errcheck // just a notification
 	exec.Command("notify-send", "-i", "chronometer", "-h", "int:value:40", "Updating...", body).Run()
 	output, err := exec.Command("yay", "-Qu").CombinedOutput()
 	if err != nil {
@@ -183,6 +203,7 @@ func update(m *Module) *Module {
 		return m
 	}
 
+	//nolint:errcheck // just a notification
 	exec.Command("notify-send", "-i", "chronometer", "-h", "int:value:60", "Updating...", body).Run()
 	details, err := parsePackageDetails(output)
 	if err != nil {
@@ -197,15 +218,18 @@ func update(m *Module) *Module {
 	y.lastUpdated = time.Now()
 	m.err = nil
 
+	//nolint:errcheck // just a notification
 	exec.Command("notify-send", "-i", "chronometer", "-h", "int:value:80", "Updating...", body).Run()
 	m.currentInfo.Set(y)
 
+	//nolint:errcheck // just a notification
 	exec.Command("notify-send", "-i", "chronometer", "-t", "800", "-h", "int:value:100", "Updating...", body).Run()
+
 	return m
 }
 
-// PackageDetail contains information about a single package update.
-type PackageDetail struct {
+// packageDetail contains information about a single package update.
+type packageDetail struct {
 	// PackageName is the name of the package.
 	PackageName string
 	// CurrentVersion is the currently installed package version.
@@ -214,19 +238,19 @@ type PackageDetail struct {
 	TargetVersion string
 }
 
-// PackageDetails contains details about package updates.
-type PackageDetails []PackageDetail
+// packageDetails contains details about package updates.
+type packageDetails []packageDetail
 
 // ParsePackageDetails parses package details from pacman compatible output of
 // the form "packageName currentVersion -> targetVersion" and returns the
 // package details. Returns an error if raw contains malformed lines.
-func parsePackageDetails(raw []byte) (PackageDetails, error) {
+func parsePackageDetails(raw []byte) (packageDetails, error) {
 	scanner := bufio.NewScanner(bytes.NewReader(raw))
 
-	details := PackageDetails{}
+	details := packageDetails{}
 
 	for scanner.Scan() {
-		var detail PackageDetail
+		var detail packageDetail
 
 		line := strings.TrimSpace(scanner.Text())
 		if len(line) == 0 {

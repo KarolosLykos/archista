@@ -1,8 +1,6 @@
 package lights
 
 import (
-	"barista.run/modules/static"
-	"golang.org/x/net/context"
 	"strconv"
 	"time"
 
@@ -10,12 +8,15 @@ import (
 	"barista.run/base/click"
 	"barista.run/colors"
 	"barista.run/group/collapsing"
+	"barista.run/modules/static"
 	"barista.run/outputs"
 	"barista.run/pango"
+	"github.com/amimof/huego"
+	"golang.org/x/net/context"
+
 	"github.com/KarolosLykos/archista/config"
 	"github.com/KarolosLykos/archista/hue"
 	"github.com/KarolosLykos/archista/utils"
-	"github.com/amimof/huego"
 )
 
 func GetLights(cfg *config.Config) bar.Module {
@@ -65,11 +66,9 @@ func retryDiscover(
 	}
 }
 
-func getLight(host, user string, ID int) *hue.Module {
-	m := hue.New(host, user, ID)
-	return m.Output(func(l *huego.Light) bar.Output {
-		return lightFormatFunc(l)
-	})
+func getLight(host, user string, id int) *hue.Module {
+	m := hue.New(host, user, id)
+	return m.Output(lightFormatFunc)
 }
 
 func lightFormatFunc(l *huego.Light) bar.Output {
@@ -147,7 +146,6 @@ func collapsingButtons(c collapsing.Controller) (start, end bar.Output) {
 	if c.Expanded() {
 		return outputs.Pango(pango.Icon("mdi-menu-left-outline").Color(colors.Hex("#13ca91"))).OnClick(click.Left(c.Collapse)),
 			outputs.Pango(pango.Icon("mdi-menu-right-outline").Color(colors.Hex("#13ca91"))).OnClick(click.Left(c.Collapse))
-
 	}
 	return outputs.Pango(pango.Icon("mdi-home-lightbulb-outline").Color(colors.Hex("#13ca91"))).OnClick(click.Left(c.Expand)), nil
 }

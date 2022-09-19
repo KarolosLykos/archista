@@ -5,6 +5,7 @@ import (
 	"barista.run/colors"
 	"barista.run/outputs"
 	"barista.run/pango"
+
 	"github.com/KarolosLykos/archista/utils"
 	"github.com/KarolosLykos/archista/yay"
 )
