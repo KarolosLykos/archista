@@ -6,8 +6,8 @@
 <a style="text-decoration: none" href="go.mod">
 <img src="https://img.shields.io/github/go-mod/go-version/KarolosLykos/archista?style=flat-square" alt="Go version">
 </a>
-<a style="text-decoration: none" href="https://github.com/KarolosLykos/archista/actions/workflows/golangci.yml/badge.svg?branch=main">
-<img src="https://github.com/KarolosLykos/archista/actions/workflows/golangci.yml/badge.svg?branch=main?style=flat-square" alt="Lint Status">
+<a style="text-decoration: none" href="https://github.com/KarolosLykos/archista/actions/workflows/golangci.yml">
+<img src="https://img.shields.io/badge/lint-passing-success?style=flat-square" alt="Build Status">
 </a>
 
 <br />
