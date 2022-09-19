@@ -10,6 +10,13 @@
 <img src="https://img.shields.io/github/workflow/status/KarolosLykos/archista/Lint?style=flat-square&label=lint" alt="Build Status">
 </a>
 
+<a style="text-decoration: none" href="https://github.com/KarolosLykos/archista/actions?query=workflow%3ACodeQL+branch%3Amain">
+<img src="https://img.shields.io/github/workflow/status/KarolosLykos/archista/CodeQL?style=flat-square&label=CodeQL" alt="Build Status">
+</a>
+
+<a style="text-decoration: none" href="https://github.com/languages/top/KarolosLykos/archista">
+<img src="https://img.shields.io/github/languages/top/KarolosLykos/archista?style=flat-square" alt="Build Status">
+</a>
 
 <br />
 <a style="text-decoration: none" href="https://github.com/KarolosLykos/archista/stargazers">
