@@ -1,4 +1,30 @@
 ### Archista
+<p align="center">
+<a style="text-decoration: none" href="https://github.com/KarolosLykos/arhista/actions?query=workflow%3AGo+branch%3Amain">
+<img src="https://img.shields.io/github/workflow/status/KarolosLykos/archista/Go?style=flat-square" alt="Build Status">
+</a>
+<a style="text-decoration: none" href="go.mod">
+<img src="https://img.shields.io/github/go-mod/go-version/KarolosLykos/archista?style=flat-square" alt="Go version">
+</a>
+
+<br />
+<a style="text-decoration: none" href="https://github.com/KarolosLykos/archista/releases">
+<img src="https://img.shields.io/github/downloads/KarolosLykos/archista/total.svg?style=flat-square" alt="Downloads">
+</a>
+<a style="text-decoration: none" href="https://github.com/KarolosLykos/archista/stargazers">
+<img src="https://img.shields.io/github/stars/KarolosLykos/archista.svg?style=flat-square" alt="Stars">
+</a>
+<a style="text-decoration: none" href="https://github.com/KarolosLykos/archista/fork">
+<img src="https://img.shields.io/github/forks/KarolosLykos/archista.svg?style=flat-square" alt="Forks">
+</a>
+<a style="text-decoration: none" href="https://github.com/KarolosLykos/archista/issues">
+<img src="https://img.shields.io/github/issues/KarolosLykos/archista.svg?style=flat-square" alt="Issues">
+</a>
+<a style="text-decoration: none" href="https://opensource.org/licenses/MIT">
+<img src="https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square" alt="License: MIT">
+</a>
+
+-----
 
 A basic bar configuration using [Barista](https://github.com/soumya92/barista). With minumum formatting using [mdi icons](https://materialdesignicons.com/).
 
