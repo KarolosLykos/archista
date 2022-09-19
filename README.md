@@ -1,6 +1,6 @@
 ### Archista
 <p align="center">
-<a style="text-decoration: none" href="https://github.com/KarolosLykos/arhista/actions?query=workflow%3AGo+branch%3Amain">
+<a style="text-decoration: none" href="https://github.com/KarolosLykos/archista/actions?query=workflow%3AGo+branch%3Amain">
 <img src="https://img.shields.io/github/workflow/status/KarolosLykos/archista/Go?style=flat-square" alt="Build Status">
 </a>
 <a style="text-decoration: none" href="go.mod">
