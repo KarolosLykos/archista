@@ -5,7 +5,14 @@ jobs:
     name: lint
     runs-on: ubuntu-latest
     steps:
+      - name: Install alsa
+        run: sudo apt-get update; sudo apt-get install --no-install-recommends libasound2-dev
+
+      - name: Install udev
+        run: sudo apt-get update; sudo apt-get install --no-install-recommends libudev-dev
+
       - uses: actions/checkout@v3
+
       - name: golangci-lint
         uses: golangci/golangci-lint-action@v3.2.0
         with:
