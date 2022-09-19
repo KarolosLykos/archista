@@ -8,9 +8,6 @@
 </a>
 
 <br />
-<a style="text-decoration: none" href="https://github.com/KarolosLykos/archista/releases">
-<img src="https://img.shields.io/github/downloads/KarolosLykos/archista/total.svg?style=flat-square" alt="Downloads">
-</a>
 <a style="text-decoration: none" href="https://github.com/KarolosLykos/archista/stargazers">
 <img src="https://img.shields.io/github/stars/KarolosLykos/archista.svg?style=flat-square" alt="Stars">
 </a>
