@@ -19,11 +19,12 @@ import (
 )
 
 func GetLights(cfg *config.Config) bar.Module {
-	b, err := retryDiscover(huego.DiscoverContext, 2, time.Second*2)(context.Background())
+	b, err := retryDiscover(huego.DiscoverContext, 2, time.Second*10)(context.Background())
 	if err != nil {
 		return static.New(outputs.Pango(
 			utils.Spacer,
 			pango.Icon("mdi-power-plug-off").Color(colors.Hex("#13ca91")),
+			pango.Text(err.Error()).Color(colors.Hex("#ff0000")),
 			utils.Spacer,
 		))
 	}

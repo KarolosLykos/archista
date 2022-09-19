@@ -43,7 +43,7 @@ func mediaFormatFunc(m media.Info) bar.Output {
 	artist := utils.Truncate(m.Artist, 35)
 	title := utils.Truncate(m.Title, 70-len(artist))
 	if len(title) < 35 {
-		artist = utils.Truncate(m.Artist, 35-len(title))
+		artist = utils.Truncate(m.Artist, 70-len(title))
 	}
 	var iconAndPosition bar.Output
 	if m.PlaybackStatus == media.Playing {
@@ -66,7 +66,7 @@ func makeMediaIconAndPosition(m media.Info) *pango.Node {
 		iconAndPosition = pango.Icon("mdi-play").Color(colors.Hex("#13ca91"))
 	}
 
-	if m.PlaybackStatus == media.Playing && strings.Contains(m.PlayerName, "chromium") {
+	if m.PlaybackStatus == media.Playing {
 		iconAndPosition.Append(
 			utils.Spacer,
 			pango.Textf("%s/", formatMediaTime(m.Position())).Color(colors.Hex("#4f4f4f")),
