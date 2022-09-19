@@ -14,7 +14,7 @@
 <img src="https://img.shields.io/github/workflow/status/KarolosLykos/archista/CodeQL?style=flat-square&label=CodeQL" alt="Build Status">
 </a>
 
-<a style="text-decoration: none" href="https://github.com/languages/top/KarolosLykos/archista">
+<a style="text-decoration: none" href="https://github.com/KarolosLykos/archista">
 <img src="https://img.shields.io/github/languages/top/KarolosLykos/archista?style=flat-square" alt="Build Status">
 </a>
 
