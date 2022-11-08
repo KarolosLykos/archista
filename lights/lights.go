@@ -2,40 +2,73 @@ package lights
 
 import (
 	"strconv"
+	"time"
 
 	"barista.run/bar"
 	"barista.run/base/click"
 	"barista.run/colors"
 	"barista.run/group/collapsing"
+	"barista.run/modules/static"
 	"barista.run/outputs"
 	"barista.run/pango"
+	"github.com/amimof/huego"
+	"golang.org/x/net/context"
+
 	"github.com/KarolosLykos/archista/config"
 	"github.com/KarolosLykos/archista/hue"
 	"github.com/KarolosLykos/archista/utils"
-	"github.com/amimof/huego"
 )
 
 func GetLights(cfg *config.Config) bar.Module {
-	light1 := getLight(cfg.HUE.Host, cfg.HUE.User, 1)
-	light2 := getLight(cfg.HUE.Host, cfg.HUE.User, 2)
-	light3 := getLight(cfg.HUE.Host, cfg.HUE.User, 3)
-	light5 := getLight(cfg.HUE.Host, cfg.HUE.User, 5)
-	light6 := getLight(cfg.HUE.Host, cfg.HUE.User, 6)
-	light7 := getLight(cfg.HUE.Host, cfg.HUE.User, 7)
-	light8 := getLight(cfg.HUE.Host, cfg.HUE.User, 8)
-	light9 := getLight(cfg.HUE.Host, cfg.HUE.User, 9)
+	b, err := retryDiscover(huego.DiscoverContext, 2, time.Second*10)(context.Background())
+	if err != nil {
+		return static.New(outputs.Pango(
+			utils.Spacer,
+			pango.Icon("mdi-power-plug-off").Color(colors.Hex("#13ca91")),
+			pango.Text(err.Error()).Color(colors.Hex("#ff0000")),
+			utils.Spacer,
+		))
+	}
 
-	collapingModule, g := collapsing.Group(light1, light2, light3, light5, light6, light7, light8, light9)
+	light1 := getLight(b.Host, cfg.HUE.User, 1)
+	light2 := getLight(b.Host, cfg.HUE.User, 2)
+	light3 := getLight(b.Host, cfg.HUE.User, 3)
+	light5 := getLight(b.Host, cfg.HUE.User, 5)
+	light6 := getLight(b.Host, cfg.HUE.User, 6)
+	light7 := getLight(b.Host, cfg.HUE.User, 7)
+	light8 := getLight(b.Host, cfg.HUE.User, 8)
+	light9 := getLight(b.Host, cfg.HUE.User, 9)
+
+	collapsingModule, g := collapsing.Group(light1, light2, light3, light5, light6, light7, light8, light9)
 	g.ButtonFunc(collapsingButtons)
 
-	return collapingModule
+	return collapsingModule
 }
 
-func getLight(host, user string, ID int) *hue.Module {
-	m := hue.New(host, user, ID)
-	return m.Output(func(l *huego.Light) bar.Output {
-		return lightFormatFunc(l)
-	})
+func retryDiscover(
+	f func(ctx context.Context) (*huego.Bridge, error),
+	retries int,
+	delay time.Duration,
+) func(ctx context.Context) (*huego.Bridge, error) {
+	return func(ctx context.Context) (*huego.Bridge, error) {
+		for r := 0; ; r++ {
+			response, err := f(ctx)
+			if err == nil || r >= retries {
+				return response, err
+			}
+
+			select {
+			case <-time.After(delay):
+			case <-ctx.Done():
+				return nil, ctx.Err()
+			}
+		}
+	}
+}
+
+func getLight(host, user string, id int) *hue.Module {
+	m := hue.New(host, user, id)
+	return m.Output(lightFormatFunc)
 }
 
 func lightFormatFunc(l *huego.Light) bar.Output {
@@ -113,7 +146,6 @@ func collapsingButtons(c collapsing.Controller) (start, end bar.Output) {
 	if c.Expanded() {
 		return outputs.Pango(pango.Icon("mdi-menu-left-outline").Color(colors.Hex("#13ca91"))).OnClick(click.Left(c.Collapse)),
 			outputs.Pango(pango.Icon("mdi-menu-right-outline").Color(colors.Hex("#13ca91"))).OnClick(click.Left(c.Collapse))
-
 	}
 	return outputs.Pango(pango.Icon("mdi-home-lightbulb-outline").Color(colors.Hex("#13ca91"))).OnClick(click.Left(c.Expand)), nil
 }

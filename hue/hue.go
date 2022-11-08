@@ -7,9 +7,8 @@ import (
 	"barista.run/base/value"
 	"barista.run/outputs"
 	"barista.run/timing"
-	"golang.org/x/time/rate"
-
 	"github.com/amimof/huego"
+	"golang.org/x/time/rate"
 )
 
 // RateLimiter throttles state updates to once every ~20ms to avoid unexpected behaviour.
@@ -56,19 +55,23 @@ func (m *Module) Output(outputFunc func(*huego.Light) bar.Output) *Module {
 	return m
 }
 
-// defaultOutput configurea a default bar output
+// defaultOutput configures a default bar output.
 func defaultOutput(l *huego.Light) bar.Output {
 	return outputs.Textf("id: %d, status: %t, reach: %t", l.ID, l.IsOn(), l.State.Reachable)
 }
 
 // Stream starts the module.
 func (m *Module) Stream(s bar.Sink) {
+	var info *huego.Light
 	i, err := m.currentInfo.Get()
 
 	nextInfo, done := m.currentInfo.Subscribe()
 	defer done()
 
-	outf := m.outputFunc.Get().(func(*huego.Light) bar.Output)
+	outf, ok := m.outputFunc.Get().(func(*huego.Light) bar.Output)
+	if !ok {
+		return
+	}
 
 	nextOutputFunc, done := m.outputFunc.Subscribe()
 	defer done()
@@ -76,13 +79,16 @@ func (m *Module) Stream(s bar.Sink) {
 	for {
 		if s.Error(err) {
 			return
-		} else if info, ok := i.(*huego.Light); ok {
+		} else if info, ok = i.(*huego.Light); ok {
 			s.Output(outputs.Group(outf(info)).OnClick(defaultClickHandler(m, info)))
 		}
 
 		select {
 		case <-nextOutputFunc:
-			outf = m.outputFunc.Get().(func(*huego.Light) bar.Output)
+			outf, ok = m.outputFunc.Get().(func(*huego.Light) bar.Output)
+			if !ok {
+				return
+			}
 		case <-nextInfo:
 			i, err = m.currentInfo.Get()
 		case <-m.scheduler.C:
@@ -92,6 +98,8 @@ func (m *Module) Stream(s bar.Sink) {
 }
 
 // defaultClickHandler provides a simple example of the click handler capabilities.
+//
+//nolint:gocognit,gocyclo // unavoidable
 func defaultClickHandler(m *Module, light *huego.Light) func(bar.Event) {
 	return func(e bar.Event) {
 		if !RateLimiter.Allow() || !light.State.Reachable {
@@ -102,25 +110,35 @@ func defaultClickHandler(m *Module, light *huego.Light) func(bar.Event) {
 		// Set the light on
 		if e.Button == bar.ButtonLeft {
 			if light.IsOn() {
-				light.Off()
+				if err := light.Off(); err != nil {
+					m.currentInfo.Error(err)
+				}
 			} else {
-				light.On()
+				if err := light.On(); err != nil {
+					m.currentInfo.Error(err)
+				}
 			}
 		}
 
 		if light.IsOn() {
 			// Dim the lights
 			if e.Button == bar.ScrollUp && light.State.Bri+10 < 254 {
-				light.Bri(light.State.Bri + 10)
+				if err := light.Bri(light.State.Bri + 10); err != nil {
+					m.currentInfo.Error(err)
+				}
 			}
 
 			if e.Button == bar.ScrollDown && light.State.Bri-10 >= 1 {
-				light.Bri(light.State.Bri - 10)
+				if err := light.Bri(light.State.Bri - 10); err != nil {
+					m.currentInfo.Error(err)
+				}
 			}
 
 			// Set maximum brightness
 			if e.Button == bar.ButtonRight {
-				light.Bri(255)
+				if err := light.Bri(255); err != nil {
+					m.currentInfo.Error(err)
+				}
 			}
 		}
 

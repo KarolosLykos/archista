@@ -8,8 +8,9 @@ import (
 	"barista.run/modules/cputemp"
 	"barista.run/outputs"
 	"barista.run/pango"
-	"github.com/KarolosLykos/archista/utils"
 	"github.com/martinlindhe/unit"
+
+	"github.com/KarolosLykos/archista/utils"
 )
 
 func GetCPUTemp() *cputemp.Module {

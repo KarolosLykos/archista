@@ -2,9 +2,11 @@ package medias
 
 import (
 	"fmt"
+	"strings"
 	"time"
 
 	"barista.run/bar"
+	"barista.run/colors"
 	"barista.run/group/modal"
 	"barista.run/modules/media"
 	"barista.run/modules/meta/split"
@@ -41,7 +43,7 @@ func mediaFormatFunc(m media.Info) bar.Output {
 	artist := utils.Truncate(m.Artist, 35)
 	title := utils.Truncate(m.Title, 70-len(artist))
 	if len(title) < 35 {
-		artist = utils.Truncate(m.Artist, 35-len(title))
+		artist = utils.Truncate(m.Artist, 70-len(title))
 	}
 	var iconAndPosition bar.Output
 	if m.PlaybackStatus == media.Playing {
@@ -55,17 +57,25 @@ func mediaFormatFunc(m media.Info) bar.Output {
 	return outputs.Group(iconAndPosition, outputs.Pango(artist, " - ", title))
 }
 
-func makeMediaIconAndPosition(m media.Info) *pango.Node {
-	iconAndPosition := pango.Icon("mdi-music")
-
+func makeMediaIconAndPosition(m media.Info) (iconAndPosition *pango.Node) {
 	if m.PlaybackStatus == media.Playing {
-		iconAndPosition.Append(utils.Spacer,
-			pango.Textf("%s/", formatMediaTime(m.Position())))
+		iconAndPosition = pango.Icon("mdi-pause").Color(colors.Hex("#13ca91"))
+	} else {
+		iconAndPosition = pango.Icon("mdi-play").Color(colors.Hex("#13ca91"))
 	}
 
-	if m.PlaybackStatus == media.Paused || m.PlaybackStatus == media.Playing {
-		iconAndPosition.Append(utils.Spacer,
-			pango.Textf("%s", formatMediaTime(m.Length)))
+	if m.PlaybackStatus == media.Playing {
+		iconAndPosition.Append(
+			utils.Spacer,
+			pango.Textf("%s/", formatMediaTime(m.Position())).Color(colors.Hex("#4f4f4f")),
+		)
+	}
+
+	if m.PlaybackStatus == media.Paused || m.PlaybackStatus == media.Playing && strings.Contains(m.PlayerName, "chromium") {
+		iconAndPosition.Append(
+			utils.Spacer,
+			pango.Textf("%s", formatMediaTime(m.Length)).Color(colors.Hex("#4f4f4f")),
+		)
 	}
 	return iconAndPosition
 }

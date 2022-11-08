@@ -13,7 +13,7 @@ type HueConfig struct {
 	User string
 }
 
-// LoadConfig reads configuration from file or environment variables.
+// Load LoadConfig reads configuration from file or environment variables.
 func Load(path string) (*Config, error) {
 	viper.SetConfigName("config")
 	viper.SetConfigType("yaml")
@@ -31,5 +31,4 @@ func Load(path string) (*Config, error) {
 	}
 
 	return config, nil
-
 }
