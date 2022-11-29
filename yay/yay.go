@@ -171,6 +171,7 @@ func defaultClickHandler(m *Module, y Yay) func(bar.Event) {
 		if e.Button == bar.ButtonLeft {
 			if y.lastUpdated.After(time.Now().Add(-m.interval / 2)) {
 				body := fmt.Sprintf("Last updated at: %s", y.lastUpdated.Format("15:04:05"))
+				//nolint:errcheck // just a notification
 				exec.Command("notify-send", "-i", "chronometer", "Up to date", body).Run()
 
 				return
