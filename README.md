@@ -1,7 +1,7 @@
 ### Archista
 <p align="center">
 <a style="text-decoration: none" href="https://github.com/KarolosLykos/archista/actions?query=workflow%3AGo+branch%3Amain">
-<img src="https://img.shields.io/github/actions/workflow/status/KarolosLykos/archista/workflows/go.yml?style=flat-square" alt="Build Status">
+<img src="https://img.shields.io/github/actions/workflow/status/KarolosLykos/archista/go.yml?style=flat-square" alt="Build Status">
 </a>
 <a style="text-decoration: none" href="go.mod">
 <img src="https://img.shields.io/github/go-mod/go-version/KarolosLykos/archista?style=flat-square" alt="Go version">
