@@ -8,5 +8,5 @@ require (
 	github.com/martinlindhe/unit v0.0.0-20190604142932-3b6be53d49af
 	github.com/spf13/viper v1.15.0
 	golang.org/x/net v0.4.0
-	golang.org/x/time v0.1.0
+	golang.org/x/time v0.3.0
 )
