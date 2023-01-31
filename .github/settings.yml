@@ -5,6 +5,7 @@ repository:
     homepage: https://github.com/KarolosLykos/archista
     topics: go, golang, golang, i3, i3-status, barista, barista-contrib, i3-bar
     default_branch: main
+    private: false
     branches:
       - name: main
         protection:
