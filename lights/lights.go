@@ -1,14 +1,15 @@
 package lights
 
 import (
+	"fmt"
+	"os/exec"
 	"strconv"
-	"time"
 
 	"barista.run/bar"
 	"barista.run/base/click"
 	"barista.run/colors"
 	"barista.run/group/collapsing"
-	"barista.run/modules/static"
+	"barista.run/modules/funcs"
 	"barista.run/outputs"
 	"barista.run/pango"
 	"github.com/amimof/huego"
@@ -20,50 +21,36 @@ import (
 )
 
 func GetLights(cfg *config.Config) bar.Module {
-	b, err := retryDiscover(huego.DiscoverContext, 2, time.Second*10)(context.Background())
-	if err != nil {
-		return static.New(outputs.Pango(
-			utils.Spacer,
-			pango.Icon("mdi-power-plug-off").Color(colors.Hex("#13ca91")),
-			pango.Text(err.Error()).Color(colors.Hex("#ff0000")),
-			utils.Spacer,
-		))
-	}
+	return funcs.OnClick(func(sink bar.Sink) {
+		b, err := huego.DiscoverContext(context.Background())
+		if err != nil {
+			//nolint:errcheck,gosec // just a notification
+			exec.Command("notify-send", "-i", "cancel", "Hue Error", fmt.Sprintf("Error: %v", err.Error())).Run()
 
-	light1 := getLight(b.Host, cfg.HUE.User, 1)
-	light2 := getLight(b.Host, cfg.HUE.User, 2)
-	light3 := getLight(b.Host, cfg.HUE.User, 3)
-	light5 := getLight(b.Host, cfg.HUE.User, 5)
-	light6 := getLight(b.Host, cfg.HUE.User, 6)
-	light7 := getLight(b.Host, cfg.HUE.User, 7)
-	light8 := getLight(b.Host, cfg.HUE.User, 8)
-	light9 := getLight(b.Host, cfg.HUE.User, 9)
+			sink.Output(outputs.Pango(
+				utils.Spacer,
+				pango.Icon("mdi-home-lightbulb-outline").Color(colors.Hex("#4f4f4f")),
+				pango.Icon("mdi-restart-alert").Color(colors.Hex("#ff0000")),
+				utils.Spacer,
+			))
 
-	collapsingModule, g := collapsing.Group(light1, light2, light3, light5, light6, light7, light8, light9)
-	g.ButtonFunc(collapsingButtons)
-
-	return collapsingModule
-}
-
-func retryDiscover(
-	f func(ctx context.Context) (*huego.Bridge, error),
-	retries int,
-	delay time.Duration,
-) func(ctx context.Context) (*huego.Bridge, error) {
-	return func(ctx context.Context) (*huego.Bridge, error) {
-		for r := 0; ; r++ {
-			response, err := f(ctx)
-			if err == nil || r >= retries {
-				return response, err
-			}
-
-			select {
-			case <-time.After(delay):
-			case <-ctx.Done():
-				return nil, ctx.Err()
-			}
+			return
 		}
-	}
+
+		light1 := getLight(b.Host, cfg.HUE.User, 1)
+		light2 := getLight(b.Host, cfg.HUE.User, 2)
+		light3 := getLight(b.Host, cfg.HUE.User, 3)
+		light5 := getLight(b.Host, cfg.HUE.User, 5)
+		light6 := getLight(b.Host, cfg.HUE.User, 6)
+		light7 := getLight(b.Host, cfg.HUE.User, 7)
+		light8 := getLight(b.Host, cfg.HUE.User, 8)
+		light9 := getLight(b.Host, cfg.HUE.User, 9)
+
+		collapsingModule, g := collapsing.Group(light1, light2, light3, light5, light6, light7, light8, light9)
+		g.ButtonFunc(collapsingButtons)
+
+		collapsingModule.Stream(sink)
+	})
 }
 
 func getLight(host, user string, id int) *hue.Module {
