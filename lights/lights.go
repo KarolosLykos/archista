@@ -1,8 +1,6 @@
 package lights
 
 import (
-	"fmt"
-	"os/exec"
 	"strconv"
 
 	"barista.run/bar"
@@ -24,9 +22,6 @@ func GetLights(cfg *config.Config) bar.Module {
 	return funcs.OnClick(func(sink bar.Sink) {
 		b, err := huego.DiscoverContext(context.Background())
 		if err != nil {
-			//nolint:errcheck,gosec // just a notification
-			exec.Command("notify-send", "-i", "cancel", "Hue Error", fmt.Sprintf("Error: %v", err.Error())).Run()
-
 			sink.Output(outputs.Pango(
 				utils.Spacer,
 				pango.Icon("mdi-home-lightbulb-outline").Color(colors.Hex("#4f4f4f")),
