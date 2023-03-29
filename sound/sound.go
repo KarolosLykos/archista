@@ -1,6 +1,9 @@
 package sound
 
 import (
+	"fmt"
+	"github.com/KarolosLykos/pulse"
+	"github.com/KarolosLykos/pulse/proto"
 	"os/exec"
 	"strings"
 
@@ -11,7 +14,6 @@ import (
 	"barista.run/modules/volume/alsa"
 	"barista.run/outputs"
 	"barista.run/pango"
-
 	"github.com/KarolosLykos/archista/utils"
 )
 
@@ -47,7 +49,47 @@ func GetVolume() *volume.Module {
 	})
 }
 
+type re struct {
+	SinkIndex uint32
+	Port      string
+}
+
+func (r *re) IsReplyTo() uint32 {
+	return proto.OpSetSinkPort
+}
 func GetSource() *volume.Module {
+	c, err := pulse.NewClient()
+	if err != nil {
+		panic(err)
+	}
+
+	defaultSink, err := c.DefaultSink()
+	if err != nil {
+		panic(err)
+	}
+
+	sinks, err := c.ListSinks()
+	if err != nil {
+		panic(err)
+	}
+
+	var newSink *pulse.Sink
+	for _, s := range sinks {
+		if s.Name() != defaultSink.Name() {
+			newSink = s
+		}
+	}
+
+	fmt.Println(newSink)
+
+	if err := c.SetDefaultSink(uint32(proto.Undefined), string(proto.Undefined)); err != nil {
+		panic(err)
+	}
+
+	if err := c.SetDefaultSink(proto.Undefined, defaultSink.ID()); err != nil {
+		panic(err)
+	}
+
 	return volume.New(alsa.DefaultMixer()).Output(func(v volume.Volume) bar.Output {
 		b, _ := exec.Command("pacmd", "list-sinks").Output()
 		if strings.Contains(string(b), "active port: <analog-output-headphones>") {
