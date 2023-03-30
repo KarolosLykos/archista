@@ -18,10 +18,10 @@ func GetLogo() bar.Module {
 	shutdown := getShutdown()
 	restart := getRestart()
 
-	collapingModule, g := collapsing.Group(restart, shutdown)
+	collapsingModule, g := collapsing.Group(restart, shutdown)
 	g.ButtonFunc(collapsingButtons)
 
-	return collapingModule
+	return collapsingModule
 }
 
 func getShutdown() bar.Module {

@@ -5,12 +5,18 @@ import (
 )
 
 type Config struct {
-	HUE HueConfig
+	HUE       HueConfig
+	Bluetooth Bluetooth
 }
 
 type HueConfig struct {
 	Host string
 	User string
+}
+
+type Bluetooth struct {
+	Adapter           string
+	HeadsetMacAddress string
 }
 
 // Load LoadConfig reads configuration from file or environment variables.

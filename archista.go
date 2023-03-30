@@ -7,6 +7,7 @@ import (
 	"barista.run"
 	"barista.run/pango/icons/mdi"
 
+	"github.com/KarolosLykos/archista/bt"
 	"github.com/KarolosLykos/archista/config"
 	"github.com/KarolosLykos/archista/cpu"
 	"github.com/KarolosLykos/archista/date"
@@ -50,6 +51,7 @@ func main() {
 	arch := logo.GetLogo()
 	update := updates.GetUpdates()
 	dockerModule := docker.New()
+	btModule := bt.GetBluetooth(cfg)
 
-	panic(barista.Run(dockerModule, update, lightsCM, source, mediaMM, temp, localDate, localTime, arch))
+	panic(barista.Run(dockerModule, update, lightsCM, btModule, source, mediaMM, temp, localDate, localTime, arch))
 }

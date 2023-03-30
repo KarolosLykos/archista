@@ -41,8 +41,10 @@ func GetLights(cfg *config.Config) bar.Module {
 		light8 := getLight(b.Host, cfg.HUE.User, 8)
 		light9 := getLight(b.Host, cfg.HUE.User, 9)
 
+		lights := []*hue.Module{light1, light2, light3, light5, light6, light7, light8, light9}
+
 		collapsingModule, g := collapsing.Group(light1, light2, light3, light5, light6, light7, light8, light9)
-		g.ButtonFunc(collapsingButtons)
+		g.ButtonFunc(collapsingButtons(lights))
 
 		collapsingModule.Stream(sink)
 	})
@@ -124,10 +126,35 @@ func getName(modelID string, id int) string {
 	}
 }
 
-func collapsingButtons(c collapsing.Controller) (start, end bar.Output) {
-	if c.Expanded() {
-		return outputs.Pango(pango.Icon("mdi-menu-left-outline").Color(colors.Hex("#13ca91"))).OnClick(click.Left(c.Collapse)),
-			outputs.Pango(pango.Icon("mdi-menu-right-outline").Color(colors.Hex("#13ca91"))).OnClick(click.Left(c.Collapse))
+func collapsingButtons(lights []*hue.Module) func(collapsing.Controller) (start bar.Output, end bar.Output) {
+	return func(c collapsing.Controller) (start, end bar.Output) {
+		if c.Expanded() {
+			return outputs.Pango(pango.Icon("mdi-menu-left-outline").Color(colors.Hex("#13ca91"))).OnClick(click.Left(c.Collapse)),
+				outputs.Pango(pango.Icon("mdi-menu-right-outline").Color(colors.Hex("#13ca91"))).OnClick(click.Left(c.Collapse))
+		}
+		return outputs.Pango(pango.Icon("mdi-home-lightbulb-outline").Color(colors.Hex("#13ca91"))).
+			OnClick(clickHandler(c, lights)), nil
 	}
-	return outputs.Pango(pango.Icon("mdi-home-lightbulb-outline").Color(colors.Hex("#13ca91"))).OnClick(click.Left(c.Expand)), nil
+}
+
+func clickHandler(c collapsing.Controller, lights []*hue.Module) func(bar.Event) {
+	return func(e bar.Event) {
+		switch e.Button {
+		case bar.ButtonLeft:
+			c.Expand()
+		case bar.ButtonRight:
+			dimLights(lights)
+		}
+	}
+}
+
+func dimLights(lights []*hue.Module) {
+	for _, l := range lights {
+		light := l.GetLight()
+		if light != nil {
+			if light.IsOn() {
+				_ = light.Bri(100)
+			}
+		}
+	}
 }

@@ -146,6 +146,15 @@ func defaultClickHandler(m *Module, light *huego.Light) func(bar.Event) {
 	}
 }
 
+func (m *Module) GetLight() *huego.Light {
+	l, err := m.b.GetLight(m.id)
+	if err != nil {
+		return nil
+	}
+
+	return l
+}
+
 func update(m *Module) *Module {
 	l, err := m.b.GetLight(m.id)
 	if err != nil {
