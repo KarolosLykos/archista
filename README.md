@@ -34,7 +34,7 @@
 
 -----
 
-A basic bar configuration using [Barista](https://github.com/soumya92/barista). With minumum formatting using [mdi icons](https://materialdesignicons.com/).
+A basic bar configuration using [Barista](https://github.com/soumya92/barista). With minimum formatting using [pango](https://docs.gtk.org/Pango/pango_markup.html) and [mdi icons](https://materialdesignicons.com/).
 
 ## Modules
 
@@ -42,11 +42,15 @@ A basic bar configuration using [Barista](https://github.com/soumya92/barista). 
 - Cpu Temp
 - Sound
 - Media
-
+- Docker
+- Lights (Philips Hue)
+- Bluetooth (using Bluez)
+- Updates (incl. yay)
+- Logo (Shutdown / Restart)
 
 ## Extra
 
-- Choose source output (Headset / Speaker) 
+- Choose source output (Headset / Speaker / HDMI-output) 
 - Lights on/off/dimm (Currently philips Hue only)
 - Updates (Check for Arch Linux updates using yay, notifies through dunst) 
 - Shutdown/Restart (Static modules)
