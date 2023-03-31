@@ -52,9 +52,9 @@ func New() (*Sound, error) {
 			activeSink = i
 		}
 
-		for i, p := range s.Info().Ports {
+		for ii, p := range s.Info().Ports {
 			if p.Name == sink.Info().ActivePortName {
-				activePort[sink.ID()] = i
+				activePort[sink.ID()] = ii
 			}
 			availablePorts[s.ID()] = append(availablePorts[s.ID()], p.Name)
 		}
@@ -96,8 +96,54 @@ func (s *Sound) GetSource() *volume.Module {
 	return volume.New(pulseaudio.DefaultSink()).Output(func(v volume.Volume) bar.Output {
 		return outputs.
 			Pango(s.getNode()).
-			OnClick(click.Left(s.onClick))
+			OnClick(s.clickHandler)
 	})
+}
+
+func (s *Sound) clickHandler(e bar.Event) {
+	switch e.Button {
+	case bar.ButtonLeft:
+		s.onClick()
+	case bar.ButtonRight:
+		s.updateSinks()
+	}
+}
+
+func (s *Sound) updateSinks() {
+	sinks, err := s.c.ListSinks()
+	if err != nil {
+		return
+	}
+
+	sink, err := s.c.DefaultSink()
+	if err != nil {
+		return
+	}
+
+	availableSinks := make([]string, len(sinks))
+	availablePorts := make(map[string][]string)
+	activeSink := 0
+	activePort := make(map[string]int)
+
+	for i, si := range sinks {
+		availableSinks[i] = si.ID()
+
+		if si.ID() == sink.ID() {
+			activeSink = i
+		}
+
+		for ii, p := range si.Info().Ports {
+			if p.Name == sink.Info().ActivePortName {
+				activePort[sink.ID()] = ii
+			}
+			availablePorts[si.ID()] = append(availablePorts[si.ID()], p.Name)
+		}
+	}
+
+	s.activeSink = activeSink
+	s.sinks = availableSinks
+	s.ports = availablePorts
+	s.activePort = activePort
 }
 
 func (s *Sound) getNode() *pango.Node {
@@ -121,15 +167,18 @@ func (s *Sound) onClick() {
 	switch {
 	case strings.Contains(sink, "analog-stereo"):
 		if s.ports[sink][s.activePort[sink]] == "analog-output-lineout" {
-			_ = s.c.SetSinkPort(proto.Undefined, sink, s.nextPort())
+			nextPort := s.nextPort()
+			_ = s.c.SetSinkPort(proto.Undefined, sink, nextPort)
 
 			return
 		}
 
-		_ = s.c.SetDefaultSink(s.nextSink())
+		nextSink := s.nextSink()
+		_ = s.c.SetDefaultSink(nextSink)
 	default:
 		nextSink := s.nextSink()
-		_ = s.c.SetSinkPort(proto.Undefined, nextSink, s.nextPort())
+		nextPort := s.nextPort()
+		_ = s.c.SetSinkPort(proto.Undefined, nextSink, nextPort)
 		_ = s.c.SetDefaultSink(nextSink)
 	}
 }
