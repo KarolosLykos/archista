@@ -93,19 +93,23 @@ func (s *Sound) GetVolume() *volume.Module {
 }
 
 func (s *Sound) GetSource() *volume.Module {
+	s.onClick()
 	return volume.New(pulseaudio.DefaultSink()).Output(func(v volume.Volume) bar.Output {
 		return outputs.
 			Pango(s.getNode()).
-			OnClick(s.clickHandler)
+			OnClick(s.clickHandler())
 	})
 }
 
-func (s *Sound) clickHandler(e bar.Event) {
-	switch e.Button {
-	case bar.ButtonLeft:
-		s.onClick()
-	case bar.ButtonRight:
-		s.updateSinks()
+func (s *Sound) clickHandler() func(bar.Event) {
+	return func(e bar.Event) {
+		if e.Button == bar.ButtonLeft {
+			s.onClick()
+		}
+
+		if e.Button == bar.ButtonRight {
+			s.updateSinks()
+		}
 	}
 }
 
@@ -174,6 +178,7 @@ func (s *Sound) onClick() {
 		}
 
 		nextSink := s.nextSink()
+		s.nextPort()
 		_ = s.c.SetDefaultSink(nextSink)
 	default:
 		nextSink := s.nextSink()
