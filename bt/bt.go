@@ -13,7 +13,6 @@ import (
 	"barista.run/pango"
 
 	"github.com/KarolosLykos/archista/config"
-	"github.com/KarolosLykos/archista/utils"
 )
 
 func GetBluetooth(cfg *config.Config) bar.Module {
@@ -35,12 +34,12 @@ func getAdapter() *bluetooth.AdapterModule {
 					return outputs.Pango(pango.Icon("mdi-bluetooth-connect").Color(colors.Hex("#2a52be")))
 				default:
 					return outputs.
-						Pango(utils.Spacer, pango.Icon("mdi-bluetooth-audio").Color(colors.Hex("#1d3985"))).
+						Pango(pango.Icon("mdi-bluetooth-audio").Color(colors.Hex("#1d3985"))).
 						OnClick(click.Left(func() { powerOnOffAdapter("off") }))
 				}
 			} else {
 				return outputs.
-					Pango(utils.Spacer, pango.Icon("mdi-bluetooth-off").Color(colors.Hex("#a04f4f"))).
+					Pango(pango.Icon("mdi-bluetooth-off").Color(colors.Hex("#a04f4f"))).
 					OnClick(click.Left(func() { powerOnOffAdapter("on") }))
 			}
 		})
@@ -68,9 +67,7 @@ func collapsingButtons(c collapsing.Controller) (start, end bar.Output) {
 	}
 
 	return outputs.Pango(
-		utils.Spacer,
 		pango.Icon("mdi-bluetooth").Color(colors.Hex("#13ca91")),
-		utils.Spacer,
 	).OnClick(click.Left(c.Expand)), nil
 }
 
