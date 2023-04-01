@@ -7,6 +7,7 @@ import (
 type Config struct {
 	HUE       HueConfig
 	Bluetooth Bluetooth
+	Disk      Disk
 }
 
 type HueConfig struct {
@@ -17,6 +18,10 @@ type HueConfig struct {
 type Bluetooth struct {
 	Adapter           string
 	HeadsetMacAddress string
+}
+
+type Disk struct {
+	Disks []string
 }
 
 // Load LoadConfig reads configuration from file or environment variables.

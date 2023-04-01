@@ -11,6 +11,7 @@ import (
 	"github.com/KarolosLykos/archista/config"
 	"github.com/KarolosLykos/archista/cpu"
 	"github.com/KarolosLykos/archista/date"
+	"github.com/KarolosLykos/archista/disk"
 	"github.com/KarolosLykos/archista/docker"
 	"github.com/KarolosLykos/archista/lights"
 	"github.com/KarolosLykos/archista/logo"
@@ -52,6 +53,19 @@ func main() {
 	update := updates.GetUpdates()
 	dockerModule := docker.New()
 	btModule := bt.GetBluetooth(cfg)
+	diskModule := disk.GetDiskModule(cfg)
 
-	panic(barista.Run(dockerModule, update, lightsCM, btModule, source, mediaMM, temp, localDate, localTime, arch))
+	panic(barista.Run(
+		dockerModule,
+		update,
+		lightsCM,
+		btModule,
+		source,
+		mediaMM,
+		diskModule,
+		temp,
+		localDate,
+		localTime,
+		arch,
+	))
 }
