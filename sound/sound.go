@@ -30,37 +30,13 @@ func New() (*Sound, error) {
 		return nil, err
 	}
 
-	sinks, err := c.ListSinks()
-	if err != nil {
+	s := &Sound{c: c}
+
+	if err = s.updateSinks(); err != nil {
 		return nil, err
 	}
 
-	sink, err := c.DefaultSink()
-	if err != nil {
-		return nil, err
-	}
-
-	availableSinks := make([]string, len(sinks))
-	availablePorts := make(map[string][]string)
-	activeSink := 0
-	activePort := make(map[string]int)
-
-	for i, s := range sinks {
-		availableSinks[i] = s.ID()
-
-		if s.ID() == sink.ID() {
-			activeSink = i
-		}
-
-		for ii, p := range s.Info().Ports {
-			if p.Name == sink.Info().ActivePortName {
-				activePort[sink.ID()] = ii
-			}
-			availablePorts[s.ID()] = append(availablePorts[s.ID()], p.Name)
-		}
-	}
-
-	return &Sound{c: c, sinks: availableSinks, ports: availablePorts, activePort: activePort, activeSink: activeSink}, nil
+	return s, nil
 }
 
 func (s *Sound) GetVolume() *volume.Module {
@@ -108,20 +84,20 @@ func (s *Sound) clickHandler() func(bar.Event) {
 		}
 
 		if e.Button == bar.ButtonRight {
-			s.updateSinks()
+			_ = s.updateSinks()
 		}
 	}
 }
 
-func (s *Sound) updateSinks() {
+func (s *Sound) updateSinks() error {
 	sinks, err := s.c.ListSinks()
 	if err != nil {
-		return
+		return err
 	}
 
 	sink, err := s.c.DefaultSink()
 	if err != nil {
-		return
+		return err
 	}
 
 	availableSinks := make([]string, len(sinks))
@@ -148,6 +124,8 @@ func (s *Sound) updateSinks() {
 	s.sinks = availableSinks
 	s.ports = availablePorts
 	s.activePort = activePort
+
+	return nil
 }
 
 func (s *Sound) getNode() *pango.Node {
