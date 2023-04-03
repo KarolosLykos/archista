@@ -15,7 +15,7 @@ import (
 	"github.com/KarolosLykos/archista/utils"
 )
 
-func GetDiskModule(cfg *config.Config) bar.Module {
+func New(cfg *config.Config) bar.Module {
 	modules := make([]bar.Module, 0)
 
 	dm := diskspace.New("/home").Output(func(i diskspace.Info) bar.Output {

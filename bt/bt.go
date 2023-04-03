@@ -15,7 +15,7 @@ import (
 	"github.com/KarolosLykos/archista/config"
 )
 
-func GetBluetooth(cfg *config.Config) bar.Module {
+func New(cfg *config.Config) bar.Module {
 	adapter := getAdapter()
 	device := getHeadSet(cfg.Bluetooth.Adapter, cfg.Bluetooth.HeadsetMacAddress)
 

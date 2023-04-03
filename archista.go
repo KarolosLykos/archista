@@ -46,26 +46,26 @@ func main() {
 	localTime := date.GetLocalTime()
 	volume := s.GetVolume()
 	source := s.GetSource()
-	temp := cpu.GetCPUTemp()
-	mediaMM := medias.GetMedia(volume)
-	lightsCM := lights.GetLights(cfg)
-	arch := logo.GetLogo()
-	update := updates.GetUpdates()
+	temperatureModule := cpu.GetCPUTemp()
+	mediaModule := medias.New(volume)
+	lightsModule := lights.GetLights(cfg)
+	logoModule := logo.New()
+	updateModule := updates.GetUpdates()
 	dockerModule := docker.New()
-	btModule := bt.GetBluetooth(cfg)
-	diskModule := disk.GetDiskModule(cfg)
+	bluetoothModule := bt.New(cfg)
+	diskModule := disk.New(cfg)
 
 	panic(barista.Run(
 		dockerModule,
-		update,
-		lightsCM,
-		btModule,
+		updateModule,
+		lightsModule,
+		bluetoothModule,
 		source,
-		mediaMM,
+		mediaModule,
 		diskModule,
-		temp,
+		temperatureModule,
 		localDate,
 		localTime,
-		arch,
+		logoModule,
 	))
 }

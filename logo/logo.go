@@ -14,7 +14,7 @@ import (
 	"github.com/KarolosLykos/archista/utils"
 )
 
-func GetLogo() bar.Module {
+func New() bar.Module {
 	shutdown := getShutdown()
 	restart := getRestart()
 

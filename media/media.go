@@ -17,7 +17,7 @@ import (
 	"github.com/KarolosLykos/archista/utils"
 )
 
-func GetMedia(vol *volume.Module) bar.Module {
+func New(vol *volume.Module) bar.Module {
 	mediaSummary, mediaDetail := player()
 
 	mainModal := modal.New()
