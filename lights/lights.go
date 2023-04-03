@@ -25,7 +25,7 @@ func New(cfg *config.Config) bar.Module {
 			sink.Output(outputs.Pango(
 				utils.Spacer,
 				pango.Icon("mdi-home-lightbulb-outline").Color(colors.Hex("#4f4f4f")),
-				pango.Icon("mdi-restart-alert").Color(colors.Hex("#ff0000")),
+				pango.Icon("mdi-restart-alert").Small().Color(colors.Hex("#ff0000")),
 				utils.Spacer,
 			))
 

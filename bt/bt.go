@@ -50,7 +50,7 @@ func getHeadSet(adapter, headsetMacAddress string) *bluetooth.DeviceModule {
 		Output(func(info bluetooth.DeviceInfo) bar.Output {
 			if info.Paired {
 				if info.Connected {
-					return outputs.Pango(pango.Icon("mdi-headphones-bluetooth").Color(colors.Hex("#13ca91")))
+					return outputs.Pango(pango.Icon("mdi-headphones-bluetooth").Small().Color(colors.Hex("#13ca91")))
 				} else {
 					return outputs.Pango(pango.Icon("mdi-headphones-bluetooth").Color(colors.Hex("#a04f4f")))
 				}

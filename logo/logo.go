@@ -38,7 +38,7 @@ func getShutdown() bar.Module {
 func getRestart() bar.Module {
 	return static.New(outputs.Pango(
 		utils.Spacer,
-		pango.Icon("mdi-restart").Color(colors.Hex("#13ca91")),
+		pango.Icon("mdi-restart").Color(colors.Hex("#4f4f4f")),
 		utils.Spacer,
 	).OnClick(click.Left(func() {
 		//nolint:errcheck // just a notification
