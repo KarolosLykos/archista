@@ -18,8 +18,9 @@ func GetCPUTemp() *cputemp.Module {
 		RefreshInterval(2 * time.Second).
 		Output(func(temp unit.Temperature) bar.Output {
 			out := outputs.Pango(
-				pango.Icon("mdi-fan").Color(colors.Hex("#13ca91")), utils.Spacer,
-				pango.Textf("%2d℃", int(temp.Celsius())),
+				pango.Icon("mdi-fan").Color(colors.Hex("#13ca91")),
+				utils.Spacer,
+				pango.Textf("%2d℃", int(temp.Celsius())).Small(),
 			)
 			utils.Threshold(out,
 				temp.Celsius() > 90,

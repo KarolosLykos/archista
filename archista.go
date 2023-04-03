@@ -13,6 +13,7 @@ import (
 	"github.com/KarolosLykos/archista/date"
 	"github.com/KarolosLykos/archista/disk"
 	"github.com/KarolosLykos/archista/docker"
+	"github.com/KarolosLykos/archista/language"
 	"github.com/KarolosLykos/archista/lights"
 	"github.com/KarolosLykos/archista/logo"
 	medias "github.com/KarolosLykos/archista/media"
@@ -48,9 +49,9 @@ func main() {
 	source := s.GetSource()
 	temperatureModule := cpu.GetCPUTemp()
 	mediaModule := medias.New(volume)
-	lightsModule := lights.GetLights(cfg)
 	logoModule := logo.New()
-	updateModule := updates.GetUpdates()
+	lightsModule := lights.New(cfg)
+	updateModule := updates.New()
 	dockerModule := docker.New()
 	bluetoothModule := bt.New(cfg)
 	diskModule := disk.New(cfg)
@@ -64,6 +65,7 @@ func main() {
 		mediaModule,
 		diskModule,
 		temperatureModule,
+		language.New(),
 		localDate,
 		localTime,
 		logoModule,

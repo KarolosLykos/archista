@@ -10,7 +10,7 @@ import (
 	"github.com/KarolosLykos/archista/yay"
 )
 
-func GetUpdates() *yay.Module {
+func New() *yay.Module {
 	m := yay.New()
 	return m.Output(func(y yay.Yay) bar.Output {
 		if y.Updates == 0 {

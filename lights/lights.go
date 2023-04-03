@@ -18,7 +18,7 @@ import (
 	"github.com/KarolosLykos/archista/utils"
 )
 
-func GetLights(cfg *config.Config) bar.Module {
+func New(cfg *config.Config) bar.Module {
 	return funcs.OnClick(func(sink bar.Sink) {
 		b, err := huego.DiscoverContext(context.Background())
 		if err != nil {

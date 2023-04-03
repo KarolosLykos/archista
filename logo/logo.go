@@ -27,7 +27,7 @@ func New() bar.Module {
 func getShutdown() bar.Module {
 	return static.New(outputs.Pango(
 		utils.Spacer,
-		pango.Icon("mdi-power").Color(colors.Hex("#13ca91")),
+		pango.Icon("mdi-power").Color(colors.Hex("#a04f4f")),
 		utils.Spacer,
 	).OnClick(click.Left(func() {
 		//nolint:errcheck // just a notification

@@ -22,7 +22,7 @@ func New(cfg *config.Config) bar.Module {
 		return outputs.Pango(
 			pango.Icon("mdi-harddisk").Color(colors.Hex("#13ca91")),
 			utils.Spacer,
-			pango.Textf("%s", format.IBytesize(i.Available)).Color(colors.Hex("#4f4f4f")))
+			pango.Textf("%s", format.IBytesize(i.Available)).Color(colors.Hex("#4f4f4f")).Small())
 	})
 
 	modules = append(modules, dm)
@@ -32,7 +32,8 @@ func New(cfg *config.Config) bar.Module {
 			return outputs.Pango(
 				pango.Icon("mdi-arrow-up-down").Color(colors.Hex("#13ca91")).Rise(-1),
 				utils.Spacer,
-				pango.Textf("%s", format.IByterate(i.Total()))).Color(colors.Hex("#4f4f4f"))
+				pango.Textf("%s", format.IByterate(i.Total())).Small(),
+			).Color(colors.Hex("#4f4f4f"))
 		})
 
 		modules = append(modules, m)
