@@ -17,7 +17,7 @@ func New() bar.Module {
 			Pango(
 				pango.Icon("mdi-keyboard-outline").Color(colors.Hex("#13ca91")),
 				utils.Spacer,
-				pango.Textf("%s", l.Name).Small(),
+				pango.Textf("%s", l.Name),
 			).
 			OnClick(func(e bar.Event) {
 				switch e.Button {

@@ -1,6 +1,8 @@
 package lights
 
 import (
+	"fmt"
+	"os/exec"
 	"strconv"
 
 	"barista.run/bar"
@@ -20,15 +22,24 @@ import (
 
 func New(cfg *config.Config) bar.Module {
 	return funcs.OnClick(func(sink bar.Sink) {
-		b, err := huego.DiscoverContext(context.Background())
+		b := huego.New(cfg.HUE.Host, cfg.HUE.User)
+		_, err := b.GetConfig()
 		if err != nil {
-			sink.Output(outputs.Pango(
-				utils.Spacer,
-				pango.Icon("mdi-home-lightbulb-outline").Color(colors.Hex("#a04f4f")),
-				utils.Spacer,
-			))
+			//nolint:errcheck,gosec // just a notification
+			exec.Command(
+				"notify-send", "-i", "cancel", "Hue module error",
+				fmt.Sprintf("Could not get bridge manually, error: %v", err)).
+				Run()
+			b, err = huego.DiscoverContext(context.Background())
+			if err != nil {
+				sink.Output(outputs.Pango(
+					utils.Spacer,
+					pango.Icon("mdi-home-lightbulb-outline").Color(colors.Hex("#a04f4f")),
+					utils.Spacer,
+				))
 
-			return
+				return
+			}
 		}
 
 		lights := make([]bar.Module, len(cfg.HUE.Lights))

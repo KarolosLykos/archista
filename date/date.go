@@ -18,7 +18,7 @@ func GetLocalDate() *clock.Module {
 			return outputs.Pango(
 				pango.Icon("mdi-calendar-month-outline").Color(colors.Hex("#13ca91")),
 				utils.Spacer,
-				pango.Text(now.Format("Mon Jan 2")).Small(),
+				pango.Text(now.Format("Mon Jan 2")),
 			)
 		})
 }
@@ -29,7 +29,7 @@ func GetLocalTime() *clock.Module {
 			return outputs.Pango(
 				pango.Icon("mdi-clock-outline").Color(colors.Hex("#13ca91")),
 				utils.Spacer,
-				pango.Text(now.Format("15:04:05")).Small(),
+				pango.Text(now.Format("15:04:05")),
 			)
 		})
 }

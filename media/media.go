@@ -54,7 +54,7 @@ func mediaFormatFunc(m media.Info) bar.Output {
 		iconAndPosition = makeMediaIconAndPosition(m)
 	}
 
-	return outputs.Group(iconAndPosition, pango.Textf("%s - %s", artist, title).Small())
+	return outputs.Group(iconAndPosition, pango.Textf("%s - %s", artist, title))
 }
 
 func makeMediaIconAndPosition(m media.Info) (iconAndPosition *pango.Node) {
@@ -67,14 +67,14 @@ func makeMediaIconAndPosition(m media.Info) (iconAndPosition *pango.Node) {
 	if m.PlaybackStatus == media.Playing {
 		iconAndPosition.Append(
 			utils.Spacer,
-			pango.Textf("%s/", formatMediaTime(m.Position())).Color(colors.Hex("#4f4f4f")).Small(),
+			pango.Textf("%s/", formatMediaTime(m.Position())).Color(colors.Hex("#4f4f4f")),
 		)
 	}
 
 	if m.PlaybackStatus == media.Paused || m.PlaybackStatus == media.Playing && strings.Contains(m.PlayerName, "chromium") {
 		iconAndPosition.Append(
 			utils.Spacer,
-			pango.Textf("%s", formatMediaTime(m.Length)).Color(colors.Hex("#4f4f4f")).Small(),
+			pango.Textf("%s", formatMediaTime(m.Length)).Color(colors.Hex("#4f4f4f")),
 		)
 	}
 	return iconAndPosition

@@ -20,7 +20,7 @@ func GetCPUTemp() *cputemp.Module {
 			out := outputs.Pango(
 				pango.Icon("mdi-fan").Color(colors.Hex("#13ca91")),
 				utils.Spacer,
-				pango.Textf("%2d℃", int(temp.Celsius())).Small(),
+				pango.Textf("%2d℃", int(temp.Celsius())),
 			)
 			utils.Threshold(out,
 				temp.Celsius() > 90,

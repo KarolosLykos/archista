@@ -63,7 +63,7 @@ func (s *Sound) GetVolume() *volume.Module {
 		return outputs.Pango(
 			pango.Icon("mdi-volume-"+iconName).Color(colors.Hex("#13ca91")),
 			utils.Spacer,
-			pango.Textf("%2d%%", pct).Small(),
+			pango.Textf("%2d%%", pct),
 		)
 	})
 }

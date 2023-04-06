@@ -21,7 +21,7 @@ func New() *yay.Module {
 			Pango(
 				utils.Spacer,
 				pango.Icon("mdi-package-variant-closed"),
-				pango.Textf("%d", y.Updates).Small(),
+				pango.Textf("%d", y.Updates),
 				utils.Spacer,
 			).
 			Color(colors.Hex("#a04f4f"))
