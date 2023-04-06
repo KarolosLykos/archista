@@ -1,6 +1,7 @@
 package sound
 
 import (
+	"os/exec"
 	"strings"
 
 	"barista.run/bar"
@@ -69,7 +70,6 @@ func (s *Sound) GetVolume() *volume.Module {
 }
 
 func (s *Sound) GetSource() *volume.Module {
-	s.onClick()
 	return volume.New(pulseaudio.DefaultSink()).Output(func(v volume.Volume) bar.Output {
 		return outputs.
 			Pango(s.getNode()).
@@ -84,7 +84,11 @@ func (s *Sound) clickHandler() func(bar.Event) {
 		}
 
 		if e.Button == bar.ButtonRight {
+			//nolint:errcheck // just a notification
+			exec.Command("notify-send", "-i", "chronometer", "-h", "int:value:40", "Sources", "Updating sound sources").Run()
 			_ = s.updateSinks()
+			//nolint:errcheck // just a notification
+			exec.Command("notify-send", "-i", "chronometer", "-t", "800", "-h", "int:value:100", "Sources", "Updating sound sources").Run()
 		}
 	}
 }
