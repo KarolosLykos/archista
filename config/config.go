@@ -11,8 +11,9 @@ type Config struct {
 }
 
 type HueConfig struct {
-	Host string
-	User string
+	Host   string
+	User   string
+	Lights []int
 }
 
 type Bluetooth struct {

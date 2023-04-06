@@ -31,18 +31,12 @@ func New(cfg *config.Config) bar.Module {
 			return
 		}
 
-		light1 := getLight(b.Host, cfg.HUE.User, 1)
-		light2 := getLight(b.Host, cfg.HUE.User, 2)
-		light3 := getLight(b.Host, cfg.HUE.User, 3)
-		light5 := getLight(b.Host, cfg.HUE.User, 5)
-		light6 := getLight(b.Host, cfg.HUE.User, 6)
-		light7 := getLight(b.Host, cfg.HUE.User, 7)
-		light8 := getLight(b.Host, cfg.HUE.User, 8)
-		light9 := getLight(b.Host, cfg.HUE.User, 9)
+		lights := make([]bar.Module, len(cfg.HUE.Lights))
+		for i := 0; i < len(cfg.HUE.Lights); i++ {
+			lights[i] = getLight(b.Host, cfg.HUE.User, cfg.HUE.Lights[i])
+		}
 
-		lights := []*hue.Module{light1, light2, light3, light5, light6, light7, light8, light9}
-
-		collapsingModule, g := collapsing.Group(light1, light2, light3, light5, light6, light7, light8, light9)
+		collapsingModule, g := collapsing.Group(lights...)
 		g.ButtonFunc(collapsingButtons(lights))
 
 		collapsingModule.Stream(sink)
@@ -125,7 +119,7 @@ func getName(modelID string, id int) string {
 	}
 }
 
-func collapsingButtons(lights []*hue.Module) func(collapsing.Controller) (start bar.Output, end bar.Output) {
+func collapsingButtons(lights []bar.Module) func(collapsing.Controller) (start bar.Output, end bar.Output) {
 	return func(c collapsing.Controller) (start, end bar.Output) {
 		if c.Expanded() {
 			return outputs.Pango(pango.Icon("mdi-menu-left-outline").Color(colors.Hex("#13ca91"))).OnClick(click.Left(c.Collapse)),
@@ -136,7 +130,7 @@ func collapsingButtons(lights []*hue.Module) func(collapsing.Controller) (start 
 	}
 }
 
-func clickHandler(c collapsing.Controller, lights []*hue.Module) func(bar.Event) {
+func clickHandler(c collapsing.Controller, lights []bar.Module) func(bar.Event) {
 	return func(e bar.Event) {
 		switch e.Button {
 		case bar.ButtonLeft:
@@ -147,12 +141,15 @@ func clickHandler(c collapsing.Controller, lights []*hue.Module) func(bar.Event)
 	}
 }
 
-func dimLights(lights []*hue.Module) {
+func dimLights(lights []bar.Module) {
 	for _, l := range lights {
-		light := l.GetLight()
-		if light != nil {
-			if light.IsOn() {
-				_ = light.Bri(100)
+		lm, ok := l.(*hue.Module)
+		if ok {
+			light := lm.GetLight()
+			if light != nil {
+				if light.IsOn() {
+					_ = light.Bri(100)
+				}
 			}
 		}
 	}

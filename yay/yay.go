@@ -265,6 +265,10 @@ func parsePackageDetails(raw []byte) (packageDetails, error) {
 			continue
 		}
 
+		if strings.Contains(line, "Searching AUR for updates...") ||
+			strings.Contains(line, "Searching databases for updates...") {
+			continue
+		}
 		_, err := fmt.Sscanf(line, "%s %s -> %s", &detail.PackageName, &detail.CurrentVersion, &detail.TargetVersion)
 		if err != nil {
 			return nil, err
