@@ -50,8 +50,8 @@ A basic bar configuration using [Barista](https://github.com/soumya92/barista). 
 
 ## Extra
 
-- Choose source output (Headset / Speaker / HDMI-output) 
-- Lights on/off/dimm (Currently philips Hue only)
+- Choose source output (Headset / Speaker / HDMI-output / Bluetooth headset) 
+- Lights on/off/dim/max (Currently philips Hue only)
 - Updates (Check for Arch Linux updates using yay, notifies through dunst) 
 - Shutdown/Restart (Static modules)
 

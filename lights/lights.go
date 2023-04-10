@@ -147,19 +147,21 @@ func clickHandler(c collapsing.Controller, lights []bar.Module) func(bar.Event) 
 		case bar.ButtonLeft:
 			c.Expand()
 		case bar.ButtonRight:
-			dimLights(lights)
+			dimLights(lights, 100)
+		case bar.ButtonMiddle:
+			dimLights(lights, 254)
 		}
 	}
 }
 
-func dimLights(lights []bar.Module) {
+func dimLights(lights []bar.Module, brightness uint8) {
 	for _, l := range lights {
 		lm, ok := l.(*hue.Module)
 		if ok {
 			light := lm.GetLight()
 			if light != nil {
 				if light.IsOn() {
-					_ = light.Bri(100)
+					_ = light.Bri(brightness)
 				}
 			}
 		}
