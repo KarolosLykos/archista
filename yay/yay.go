@@ -213,14 +213,12 @@ func update(m *Module) *Module {
 	exec.Command("notify-send", "-i", "chronometer", "-h", "int:value:40", "Updating...", body).Run()
 	output, err := exec.Command("yay", "-Qu").Output()
 	if err != nil {
-		if _, ok := err.(*exec.ExitError); ok {
+		if _, ok := err.(*exec.ExitError); !ok {
+			m.currentInfo.Set(y)
+			m.err = err
+
 			return m
 		}
-
-		m.currentInfo.Set(y)
-		m.err = err
-
-		return m
 	}
 
 	//nolint:errcheck // just a notification
