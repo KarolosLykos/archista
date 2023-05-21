@@ -71,7 +71,7 @@ func makeMediaIconAndPosition(m media.Info) (iconAndPosition *pango.Node) {
 		)
 	}
 
-	if m.PlaybackStatus == media.Paused || m.PlaybackStatus == media.Playing && strings.Contains(m.PlayerName, "chromium") {
+	if m.PlaybackStatus == media.Paused || m.PlaybackStatus == media.Playing && strings.Contains(m.PlayerName, "brave") {
 		iconAndPosition.Append(
 			utils.Spacer,
 			pango.Textf("%s", formatMediaTime(m.Length)).Color(colors.Hex("#4f4f4f")),
