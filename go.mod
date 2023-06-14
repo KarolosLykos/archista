@@ -9,6 +9,6 @@ require (
 	github.com/martinlindhe/unit v0.0.0-20221119104754-49d25a6e149e
 	github.com/martinohmann/barista-contrib v0.0.0-20230324194946-e5c115e49dc3
 	github.com/spf13/viper v1.16.0
-	golang.org/x/net v0.10.0
+	golang.org/x/net v0.11.0
 	golang.org/x/time v0.3.0
 )
