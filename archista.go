@@ -4,7 +4,7 @@ import (
 	"flag"
 	"fmt"
 
-	"barista.run"
+	barista "barista.run"
 	"barista.run/pango/icons/mdi"
 
 	"github.com/KarolosLykos/archista/bt"
