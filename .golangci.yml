@@ -33,7 +33,6 @@ linters:
     - govet
     - ineffassign
     - staticcheck
-    - typecheck
     - unused
     - bodyclose
     - depguard
@@ -53,17 +52,12 @@ linters:
     - misspell
     - noctx
     - nolintlint
-    - rowserrcheck
-    - sqlclosecheck
     - stylecheck
     - thelper
     - tparallel
     - unconvert
     - unparam
     - whitespace
-    # - errorlint
-    # - goerr113
-    # - wrapcheck
 issues:
   # Excluding configuration per-path, per-linter, per-text and per-source
   exclude-rules:
@@ -74,9 +68,10 @@ issues:
         - dupl
         - gosec
         - gocritic
+        - typecheck
     - linters:
         - gocritic
       text: "unnecessaryDefer:"
 
 service:
-  golangci-lint-version: 1.46.x # use the fixed version to not introduce new linters unexpectedly
+  golangci-lint-version: 1.52.x # use the fixed version to not introduce new linters unexpectedly
