@@ -1,6 +1,6 @@
 module github.com/KarolosLykos/archista
 
-go 1.19
+go 1.21
 
 require (
 	barista.run v0.0.0-20231009005321-5ad0c0b03f16

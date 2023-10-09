@@ -35,7 +35,6 @@ linters:
     - staticcheck
     - unused
     - bodyclose
-    - depguard
     - dupl
     - exportloopref
     - forcetypeassert
@@ -58,6 +57,7 @@ linters:
     - unconvert
     - unparam
     - whitespace
+    - typecheck
 issues:
   # Excluding configuration per-path, per-linter, per-text and per-source
   exclude-rules:
@@ -68,7 +68,6 @@ issues:
         - dupl
         - gosec
         - gocritic
-        - typecheck
     - linters:
         - gocritic
       text: "unnecessaryDefer:"
