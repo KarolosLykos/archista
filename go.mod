@@ -3,13 +3,13 @@ module github.com/KarolosLykos/archista
 go 1.21
 
 require (
-	barista.run v0.0.0-20230619160422-453053d550f6
+	barista.run v0.0.0-20231009005321-5ad0c0b03f16
 	github.com/KarolosLykos/pulse v0.0.5
 	github.com/amimof/huego v1.2.1
 	github.com/martinlindhe/unit v0.0.0-20230420213220-4adfd7d0a0d6
 	github.com/martinohmann/barista-contrib v0.0.0-20230324194946-e5c115e49dc3
 	github.com/spf13/viper v1.17.0
-	golang.org/x/net v0.15.0
+	golang.org/x/net v0.16.0
 	golang.org/x/time v0.3.0
 )
 
@@ -34,10 +34,10 @@ require (
 	github.com/subosito/gotenv v1.6.0 // indirect
 	go.uber.org/atomic v1.9.0 // indirect
 	go.uber.org/multierr v1.9.0 // indirect
-	golang.org/x/crypto v0.13.0 // indirect
+	golang.org/x/crypto v0.14.0 // indirect
 	golang.org/x/exp v0.0.0-20230905200255-921286631fa9 // indirect
-	golang.org/x/oauth2 v0.12.0 // indirect
-	golang.org/x/sys v0.12.0 // indirect
+	golang.org/x/oauth2 v0.13.0 // indirect
+	golang.org/x/sys v0.13.0 // indirect
 	golang.org/x/text v0.13.0 // indirect
 	google.golang.org/appengine v1.6.7 // indirect
 	google.golang.org/protobuf v1.31.0 // indirect
