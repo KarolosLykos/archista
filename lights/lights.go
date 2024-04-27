@@ -103,6 +103,10 @@ var lightIcons = map[string]state{
 		on:  "mdi-lightbulb",
 		off: "mdi-lightbulb-outline",
 	},
+	"LTA004": {
+		on:  "mdi-lightbulb",
+		off: "mdi-lightbulb-outline",
+	},
 	"LCL001": {
 		on:  "mdi-led-strip",
 		off: "mdi-led-strip-variant",
@@ -121,7 +125,7 @@ func getName(modelID string, id int) string {
 	switch modelID {
 	case "LCG002":
 		return "Spot(" + strconv.Itoa(id) + ")"
-	case "LCT015":
+	case "LCT015", "LTA004":
 		return "Bulb(" + strconv.Itoa(id) + ")"
 	case "LCL001":
 		return "Strip(" + strconv.Itoa(id) + ")"
