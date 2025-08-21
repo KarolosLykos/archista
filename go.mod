@@ -18,7 +18,7 @@ require (
 require (
 	github.com/dustin/go-humanize v1.0.1 // indirect
 	github.com/fsnotify/fsnotify v1.8.0 // indirect
-	github.com/go-viper/mapstructure/v2 v2.3.0 // indirect
+	github.com/go-viper/mapstructure/v2 v2.4.0 // indirect
 	github.com/godbus/dbus/v5 v5.1.0 // indirect
 	github.com/jfreymuth/pulse v0.1.1-0.20221101213618-75628dabd933 // indirect
 	github.com/lucasb-eyer/go-colorful v1.2.0 // indirect
