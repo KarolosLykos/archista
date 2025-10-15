@@ -141,7 +141,7 @@ func (s *Sound) getNode() *pango.Node {
 		}
 
 		return pango.Icon("mdi-headphones").Color(colors.Hex("#13ca91"))
-	case strings.Contains(sink, "bluez_sink"):
+	case strings.Contains(sink, "bluez_"):
 		return pango.Icon("mdi-headphones-bluetooth").Color(colors.Hex("#13ca91"))
 	default:
 		return pango.Icon("mdi-television").Color(colors.Hex("#13ca91"))
