@@ -1,6 +1,7 @@
 package lights
 
 import (
+	"context"
 	"fmt"
 	"os/exec"
 	"strconv"
@@ -13,7 +14,6 @@ import (
 	"barista.run/outputs"
 	"barista.run/pango"
 	"github.com/amimof/huego"
-	"golang.org/x/net/context"
 
 	"github.com/KarolosLykos/archista/config"
 	"github.com/KarolosLykos/archista/hue"
