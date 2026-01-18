@@ -133,6 +133,7 @@ func (s *Sound) updateSinks() error {
 }
 
 func (s *Sound) getNode() *pango.Node {
+	_ = s.updateSinks()
 	sink := s.sinks[s.activeSink]
 	switch {
 	case strings.Contains(sink, "analog-stereo"):
