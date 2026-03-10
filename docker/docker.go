@@ -1,6 +1,7 @@
 package docker
 
 import (
+	"context"
 	"os/exec"
 	"time"
 
@@ -56,22 +57,22 @@ func (d *docker) toggle() {
 	switch d.s {
 	case serviceStatus:
 		//nolint:errcheck // just a notification
-		exec.Command("notify-send", "-i", "chronometer", "-h", "int:value:20", "Docker service", notificationStatus).Run()
+		exec.CommandContext(context.Background(), "notify-send", "-i", "chronometer", "-h", "int:value:20", "Docker service", notificationStatus).Run()
 
-		_ = exec.Command("sudo", "systemctl", "stop", "docker.service").Run()
-		_ = exec.Command("sudo", "systemctl", "stop", "docker.socket").Run()
+		_ = exec.CommandContext(context.Background(), "sudo", "systemctl", "stop", "docker.service").Run()
+		_ = exec.CommandContext(context.Background(), "sudo", "systemctl", "stop", "docker.socket").Run()
 	default:
 		notificationStatus = "Starting..."
 		//nolint:errcheck // just a notification
-		exec.Command("notify-send", "-i", "chronometer", "Docker service", notificationStatus).Run()
-		_ = exec.Command("sudo", "systemctl", "start", "docker.service").Run()
+		exec.CommandContext(context.Background(), "notify-send", "-i", "chronometer", "Docker service", notificationStatus).Run()
+		_ = exec.CommandContext(context.Background(), "sudo", "systemctl", "start", "docker.service").Run()
 	}
 
 	//nolint:errcheck // just a notification
-	exec.Command("notify-send", "-i", "chronometer", "-h", "int:value:50", "Docker service", notificationStatus).Run()
+	exec.CommandContext(context.Background(), "notify-send", "-i", "chronometer", "-h", "int:value:50", "Docker service", notificationStatus).Run()
 
 	d.m.Refresh()
 
 	//nolint:errcheck // just a notification
-	exec.Command("notify-send", "-t", "1000", "-i", "chronometer", "-h", "int:value:100", "Docker service", notificationStatus).Run()
+	exec.CommandContext(context.Background(), "notify-send", "-t", "1000", "-i", "chronometer", "-h", "int:value:100", "Docker service", notificationStatus).Run()
 }

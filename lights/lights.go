@@ -26,7 +26,8 @@ func New(cfg *config.Config) bar.Module {
 		_, err := b.GetConfig()
 		if err != nil {
 			//nolint:errcheck,gosec // just a notification
-			exec.Command(
+			exec.CommandContext(
+				context.Background(),
 				"notify-send", "-i", "cancel", "Hue module error",
 				fmt.Sprintf("Could not get bridge manually, error: %v", err)).
 				Run()

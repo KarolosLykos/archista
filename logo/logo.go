@@ -1,6 +1,7 @@
 package logo
 
 import (
+	"context"
 	"os/exec"
 
 	"barista.run/bar"
@@ -31,7 +32,7 @@ func getShutdown() bar.Module {
 		utils.Spacer,
 	).OnClick(click.Left(func() {
 		//nolint:errcheck // just a notification
-		exec.Command("poweroff").Run()
+		exec.CommandContext(context.Background(), "poweroff").Run()
 	})))
 }
 
@@ -42,7 +43,7 @@ func getRestart() bar.Module {
 		utils.Spacer,
 	).OnClick(click.Left(func() {
 		//nolint:errcheck // just a notification
-		exec.Command("reboot").Run()
+		exec.CommandContext(context.Background(), "reboot").Run()
 	})))
 }
 

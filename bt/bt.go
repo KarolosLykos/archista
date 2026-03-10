@@ -1,6 +1,7 @@
 package bt
 
 import (
+	"context"
 	"fmt"
 	"os/exec"
 
@@ -72,9 +73,10 @@ func collapsingButtons(c collapsing.Controller) (start, end bar.Output) {
 }
 
 func powerOnOffAdapter(onOff string) {
-	if err := exec.Command("bluetoothctl", "power", onOff).Run(); err != nil {
+	if err := exec.CommandContext(context.Background(), "bluetoothctl", "power", onOff).Run(); err != nil {
 		//nolint:errcheck,gosec // just a notification
-		exec.Command(
+		exec.CommandContext(
+			context.Background(),
 			"notify-send",
 			"-i",
 			"cancel",

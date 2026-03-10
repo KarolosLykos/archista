@@ -1,6 +1,7 @@
 package sound
 
 import (
+	"context"
 	"os/exec"
 	"strings"
 
@@ -85,10 +86,10 @@ func (s *Sound) clickHandler() func(bar.Event) {
 
 		if e.Button == bar.ButtonRight {
 			//nolint:errcheck // just a notification
-			exec.Command("notify-send", "-i", "chronometer", "-h", "int:value:40", "Sources", "Updating sound sources").Run()
+			exec.CommandContext(context.Background(), "notify-send", "-i", "chronometer", "-h", "int:value:40", "Sources", "Updating sound sources").Run()
 			_ = s.updateSinks()
 			//nolint:errcheck // just a notification
-			exec.Command("notify-send", "-i", "chronometer", "-t", "800", "-h", "int:value:100", "Sources", "Updating sound sources").Run()
+			exec.CommandContext(context.Background(), "notify-send", "-i", "chronometer", "-t", "800", "-h", "int:value:100", "Sources", "Updating sound sources").Run()
 		}
 	}
 }

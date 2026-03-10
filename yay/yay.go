@@ -3,6 +3,7 @@ package yay
 import (
 	"bufio"
 	"bytes"
+	"context"
 	"fmt"
 	"os/exec"
 	"strings"
@@ -98,7 +99,7 @@ func (m *Module) Stream(s bar.Sink) {
 					}
 					if e.Button == bar.ButtonRight {
 						//nolint:errcheck,gosec // just a notification
-						exec.Command("notify-send", "-i", "cancel", "Error", fmt.Sprintf("Error: %v", m.err)).Run()
+						exec.CommandContext(context.Background(), "notify-send", "-i", "cancel", "Error", fmt.Sprintf("Error: %v", m.err)).Run()
 					}
 				}))
 
@@ -128,7 +129,7 @@ func defaultClickHandler(m *Module, y Yay) func(bar.Event) {
 	return func(e bar.Event) {
 		if m.err != nil {
 			//nolint:errcheck // just a notification
-			exec.Command("notify-send", "-i", "cancel", "Error", fmt.Sprintf("Error: %v", m.err)).Run()
+			exec.CommandContext(context.Background(), "notify-send", "-i", "cancel", "Error", fmt.Sprintf("Error: %v", m.err)).Run()
 
 			return
 		}
@@ -143,7 +144,7 @@ func defaultClickHandler(m *Module, y Yay) func(bar.Event) {
 			s = strings.TrimSuffix(s, "\n")
 
 			//nolint:errcheck // just a notification
-			exec.Command("notify-send", "-i", "view-process-tree", "Packages", s).Run()
+			exec.CommandContext(context.Background(), "notify-send", "-i", "view-process-tree", "Packages", s).Run()
 
 			return
 		}
@@ -152,7 +153,7 @@ func defaultClickHandler(m *Module, y Yay) func(bar.Event) {
 			body := fmt.Sprintf("Last updated at: %s", y.lastUpdated.Format("15:04:05"))
 
 			//nolint:errcheck // just a notification
-			exec.Command("notify-send", "-i", "chronometer", "Forced update", body).Run()
+			exec.CommandContext(context.Background(), "notify-send", "-i", "chronometer", "Forced update", body).Run()
 			m = update(m)
 
 			return
@@ -163,7 +164,7 @@ func defaultClickHandler(m *Module, y Yay) func(bar.Event) {
 			body := fmt.Sprintf("Last updated at: %s", y.lastUpdated.Format("15:04:05"))
 
 			//nolint:errcheck // just a notification
-			exec.Command("notify-send", "-i", "chronometer", "Rate limited", body).Run()
+			exec.CommandContext(context.Background(), "notify-send", "-i", "chronometer", "Rate limited", body).Run()
 
 			return
 		}
@@ -172,7 +173,7 @@ func defaultClickHandler(m *Module, y Yay) func(bar.Event) {
 			if y.lastUpdated.After(time.Now().Add(-m.interval / 2)) {
 				body := fmt.Sprintf("Last updated at: %s", y.lastUpdated.Format("15:04:05"))
 				//nolint:errcheck // just a notification
-				exec.Command("notify-send", "-i", "chronometer", "Up to date", body).Run()
+				exec.CommandContext(context.Background(), "notify-send", "-i", "chronometer", "Up to date", body).Run()
 
 				return
 			}
@@ -188,7 +189,7 @@ func update(m *Module) *Module {
 	body := fmt.Sprintf("Current update time: %s", time.Now().Format("15:04:05"))
 
 	defer exec.
-		Command("notify-send", "-i", "chronometer", "-t", "800", "-h", "int:value:100", "Updating...", body).
+		CommandContext(context.Background(), "notify-send", "-i", "chronometer", "-t", "800", "-h", "int:value:100", "Updating...", body).
 		Run() //nolint:errcheck // just a notification
 
 	y := Yay{
@@ -197,8 +198,8 @@ func update(m *Module) *Module {
 	}
 
 	//nolint:errcheck // just a notification
-	exec.Command("notify-send", "-i", "chronometer", "-h", "int:value:20", "Updating...", body).Run()
-	if _, err := exec.Command("yay", "-Sy").CombinedOutput(); err != nil {
+	exec.CommandContext(context.Background(), "notify-send", "-i", "chronometer", "-h", "int:value:20", "Updating...", body).Run()
+	if _, err := exec.CommandContext(context.Background(), "yay", "-Sy").CombinedOutput(); err != nil {
 		m.currentInfo.Set(y)
 		m.err = err
 
@@ -206,8 +207,8 @@ func update(m *Module) *Module {
 	}
 
 	//nolint:errcheck // just a notification
-	exec.Command("notify-send", "-i", "chronometer", "-h", "int:value:40", "Updating...", body).Run()
-	output, err := exec.Command("yay", "-Qu").Output()
+	exec.CommandContext(context.Background(), "notify-send", "-i", "chronometer", "-h", "int:value:40", "Updating...", body).Run()
+	output, err := exec.CommandContext(context.Background(), "yay", "-Qu").Output()
 	if err != nil {
 		m.currentInfo.Set(y)
 		m.err = err
@@ -216,7 +217,7 @@ func update(m *Module) *Module {
 	}
 
 	//nolint:errcheck // just a notification
-	exec.Command("notify-send", "-i", "chronometer", "-h", "int:value:60", "Updating...", body).Run()
+	exec.CommandContext(context.Background(), "notify-send", "-i", "chronometer", "-h", "int:value:60", "Updating...", body).Run()
 	details, err := parsePackageDetails(output)
 	if err != nil {
 		m.currentInfo.Set(y)
@@ -231,7 +232,7 @@ func update(m *Module) *Module {
 	m.err = nil
 
 	//nolint:errcheck // just a notification
-	exec.Command("notify-send", "-i", "chronometer", "-h", "int:value:80", "Updating...", body).Run()
+	exec.CommandContext(context.Background(), "notify-send", "-i", "chronometer", "-h", "int:value:80", "Updating...", body).Run()
 	m.currentInfo.Set(y)
 
 	return m
