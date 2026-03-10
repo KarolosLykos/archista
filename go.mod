@@ -1,8 +1,6 @@
 module github.com/KarolosLykos/archista
 
-go 1.24.0
-
-toolchain go1.24.1
+go 1.25.0
 
 require (
 	barista.run v0.0.0-20231009005321-5ad0c0b03f16
@@ -11,7 +9,7 @@ require (
 	github.com/martinlindhe/unit v0.0.0-20230420213220-4adfd7d0a0d6
 	github.com/martinohmann/barista-contrib v0.0.0-20230324194946-e5c115e49dc3
 	github.com/spf13/viper v1.21.0
-	golang.org/x/time v0.14.0
+	golang.org/x/time v0.15.0
 )
 
 require (
