@@ -20,6 +20,10 @@ import (
 	"github.com/KarolosLykos/archista/utils"
 )
 
+const (
+	mdilightbulboutline = "mdi-lightbulb-outline"
+)
+
 func New(cfg *config.Config) bar.Module {
 	return funcs.OnClick(func(sink bar.Sink) {
 		b := huego.New(cfg.HUE.Host, cfg.HUE.User)
@@ -98,15 +102,15 @@ type state struct {
 var lightIcons = map[string]state{
 	"LCG002": {
 		on:  "mdi-spotlight-beam",
-		off: "mdi-lightbulb-outline",
+		off: "mdillightbulboutline",
 	},
 	"LCT015": {
 		on:  "mdi-lightbulb",
-		off: "mdi-lightbulb-outline",
+		off: "mdillightbulboutline",
 	},
 	"LTA004": {
 		on:  "mdi-lightbulb",
-		off: "mdi-lightbulb-outline",
+		off: "mdillightbulboutline",
 	},
 	"LCL001": {
 		on:  "mdi-led-strip",
