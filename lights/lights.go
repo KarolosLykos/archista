@@ -21,7 +21,7 @@ import (
 )
 
 const (
-	mdilightbulboutline = "mdi-lightbulb-outline"
+	mdilightbulboutline string = "mdi-lightbulb-outline"
 )
 
 func New(cfg *config.Config) bar.Module {
@@ -102,15 +102,15 @@ type state struct {
 var lightIcons = map[string]state{
 	"LCG002": {
 		on:  "mdi-spotlight-beam",
-		off: "mdillightbulboutline",
+		off: mdilightbulboutline,
 	},
 	"LCT015": {
 		on:  "mdi-lightbulb",
-		off: "mdillightbulboutline",
+		off: mdilightbulboutline,
 	},
 	"LTA004": {
 		on:  "mdi-lightbulb",
-		off: "mdillightbulboutline",
+		off: mdilightbulboutline,
 	},
 	"LCL001": {
 		on:  "mdi-led-strip",
